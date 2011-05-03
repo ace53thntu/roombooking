@@ -1,0 +1,16 @@
+SetEnv APPLICATION_ENV development
+
+php_value session.auto_start 0
+php_value max_execution_time 600
+
+php_value magic_quotes_gpc Off
+php_value register_globals 1
+php_value upload_max_filesize 10M
+php_value post_max_size 20M
+
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} -s [OR]
+RewriteCond %{REQUEST_FILENAME} -l [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^.*$ - [NC,L]
+RewriteRule ^.*$ index.php [NC,L]
