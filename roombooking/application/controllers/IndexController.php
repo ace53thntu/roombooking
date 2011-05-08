@@ -8,9 +8,12 @@ class IndexController extends Zend_Controller_Action
         /* Initialize action controller here */
     }
 
-    public function indexAction()
-    {
-        // action body
+    public function indexAction() {
+    	if ($this->_helper->user->isLoggedIn()) {
+    	   
+    	} else {
+    	   $this->_redirect("/user/login");
+    	}
     }
 
 

@@ -1,0 +1,520 @@
+@charset "utf-8";
+/* CSS Document */
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10px;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    font-style: normal;
+    font-variant: normal;
+    margin: 0px;
+    font-weight: normal;
+    color: #333;
+    background-image: url(../gfx/bg.png);
+    background-repeat: repeat-x;
+    background-color: #E2E6E7;
+}
+#Container {
+    margin: auto;
+    width: 960px;
+    text-align: left;
+    background-repeat: repeat-y;
+    background-position: left;
+    display: block;
+}
+
+#Header {
+    height: 100px;
+}
+
+p {
+    margin: 0px;
+    padding: 0px;
+    line-height: 11px;
+    font-size: 10px;
+}
+
+h1 {
+    font-family: "Arial Black", Gadget, sans-serif;
+    font-size: 24px;
+    font-style: normal;
+    font-variant: normal;
+    margin: 0px;
+    font-weight: bold;
+    color: #333;
+    text-shadow: 1px 1px 0px #fff;
+    text-transform: uppercase;
+    line-height: 18px;
+}
+h3 {
+    text-transform: uppercase;
+    font-weight: bold;
+    margin: 0px;
+    padding: 0px;
+    font-size: 11px;
+    color: #000;
+}
+a:hover h3{
+    color: #FFF;
+}
+.HeadInfo {
+    color: #F03;
+    font-weight: normal;
+    padding-right: 10px;
+    padding-left: 2px;
+}
+/**MainLink **/
+.Link {
+    display: block;
+    list-style-type: none;
+    text-decoration: none;
+    float: left;
+    width: 330px;
+    margin: 0px;
+    line-height: 11px;
+    padding: 0px;
+}
+.Link a {
+    display: block;
+    list-style-type: none;
+    text-decoration: none;
+    float: left;
+    width: 330px;
+    margin: 0px;
+    padding-top: 8px;
+    padding-right: 0px;
+    padding-bottom: 10px;
+    padding-left: 0px;
+}
+.Link a:hover {
+    display: block;
+    background-repeat: no-repeat;
+    background-position: right center;
+    background-color: #F03;
+}
+.Link .LeftSpace {
+    width: 90px;
+    float: left;
+    text-align: right;
+    font-size: 10px;
+    margin-right: 10px;
+    padding-left: 10px;
+}
+.Link .RightSpace {
+    float: left;
+    width: 220px;
+}
+
+#PanelHead {
+    height: 40px;
+    padding-top: 20px;
+    padding-left: 40px;
+    padding-bottom: 0px;
+    margin-bottom: 5px;
+}
+#PanelHead p{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1em;
+    font-style: normal;
+    font-variant: normal;
+    margin: 0px;
+    font-weight: normal;
+    color: #000;
+    line-height: 12px;
+    text-transform: uppercase;
+}
+
+#PanelContent {
+    padding-right: 0px;
+    padding-left: 0px;
+    margin-right: 0px;
+    margin-left: 0px;
+    padding-top: 0px;
+    height: 200px;
+}
+#PanelContent p{
+    margin: 0px;
+    line-height: 11px;
+    font-size: 10px;
+    color: #666;
+    font-family: Arial, Helvetica, sans-serif;
+    text-shadow: none;
+    text-transform: uppercase;
+    font-weight: normal;
+}
+#PanelContent a:hover p  {
+    color: #000;
+}
+
+
+#PanelInfo {
+    padding-right: 10px;
+    padding-left: 10px;
+    margin-right: 10px;
+    margin-left: 10px;
+    height: 30px;
+    text-align: center;
+    color: #F03;
+    padding-top: 10px;
+}
+
+#PanelFoot {
+    padding-right: 10px;
+    padding-left: 10px;
+    margin-right: 10px;
+    margin-left: 10px;
+    height: 30px;
+    text-align: center;
+    vertical-align: middle;
+    margin-top: 10px;
+}
+
+#Availability {
+    float: left;
+    height: 620px;
+    width: 300px;
+    /* [disabled]background-image: url(../img/bgpanelbig.png); */
+}
+
+#Availability #PanelContent {
+    height: 470px;
+    padding: 0px;
+}
+
+#Availability .AvailRooms{
+    width: 298px;
+}
+#Availability .AvailRooms .RightSpace {
+    vertical-align: baseline;
+    padding-top: 8px;
+
+}
+
+
+#Availability .LeftSpace {
+    float: left;
+    text-align: right;
+    font-size: 10px;
+    margin-right: 10px;
+    padding-left: 10px;
+    width: 60px;
+}
+#Availability .LeftSpace p{
+    margin: 0px;
+    line-height: 22px;
+    font-size: 24px;
+    padding-top: 0px;
+    padding-right: 0px;
+    padding-bottom: 0px;
+    padding-left: 0px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #333;
+    text-shadow: none;
+    font-weight: bold;
+}
+#Availability a:hove .LeftSpace p  {
+    color: #FFF;
+}
+#Availability a:hover .LeftSpace p {
+    color: #FFF;
+}
+
+
+#Availability .RightSpace {
+    width: 215px;
+    height: 24px;
+    float: left;
+}
+#Availability .Link {
+    width: 300px;
+}
+#Availability .Link a {
+    width: 298px;
+    margin-bottom: 0px;
+}
+#Availability .Link a:hover {
+    display: block;
+    background-color: #bbc0c2;
+}
+.DiscComCol {
+    color: #F03;
+    font-weight: normal;
+    padding-right: 10px;
+    padding-left: 2px;
+}
+a:hover .DiscComCol {
+    color: #FFF;
+    text-shadow: none;
+}
+
+.AvailRooms {
+    display: block;
+    list-style-type: none;
+    text-decoration: none;
+    float: left;
+    padding-top: 8px;
+    padding-right: 0px;
+    padding-bottom: 3px;
+    padding-left: 0px;
+    margin-top: 0px;
+    margin-right: 0px;
+    margin-bottom: 5px;
+    margin-left: 0px;
+    border-top-width: 1px;
+    border-right-width: 0px;
+    border-bottom-width: 1px;
+    border-left-width: 0px;
+    border-top-style: dotted;
+    border-right-style: none;
+    border-bottom-style: dotted;
+    border-left-style: none;
+    border-top-color: #999;
+    border-right-color: #999;
+    border-bottom-color: #999;
+    border-left-color: #999;
+}
+
+.AvailRooms h1 {
+    margin: 0px;
+    line-height: 22px;
+    font-size: 24px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #000;
+    text-shadow: none;
+    padding: 0px;
+}
+
+#Summary {
+    float: left;
+    height: 310px;
+    width: 330px;
+    background-image: url(../gfx/bgpanelbl.png);
+    background-repeat: no-repeat;
+}
+
+#Summary .RightSpace p{
+    text-shadow: none;
+    line-height: 16px;
+    font-size: 11px;
+    font-weight: normal;
+    color: #333;
+}
+#Summary .LeftSpace p {
+    text-shadow: none;
+    line-height: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #000;
+    font-size: 12px;
+}
+.Summary .LeftSpace{
+    width: 90px;
+    float: left;
+    text-align: right;
+    font-size: 10px;
+    margin-right: 10px;
+    padding-left: 10px;
+}
+.Summary .RightSpace{
+    float: left;
+    width: 220px;
+}
+.Summary {
+    display: block;
+    list-style-type: none;
+    text-decoration: none;
+    float: left;
+    width: 330px;
+    margin: 0px;
+    padding-top: 5px;
+    padding-right: 0px;
+    padding-bottom: 0px;
+    padding-left: 0px;
+    line-height: 11px;
+}
+
+#Reservations {
+    float: left;
+    height: 310px;
+    width: 330px;
+    background-image: url(../gfx/bgpaneltl.png);
+    background-repeat: no-repeat;
+}
+
+
+#Requests {
+    float: left;
+    height: 310px;
+    width: 330px;
+    background-image: url(../gfx/bgpaneltr.png);
+    background-repeat: no-repeat;
+}
+
+#Warnings {
+    float: left;
+    height: 310px;
+    width: 330px;
+    background-image: url(../gfx/bgpanelbr.png);
+    background-repeat: no-repeat;
+}
+
+
+
+
+#Warnings h1 {
+    font-family: "Arial Black", Gadget, sans-serif;
+    font-size: 24px;
+    font-style: normal;
+    font-variant: normal;
+    margin: 0px;
+    font-weight: bold;
+    color: #F03;
+    text-shadow: 1px 1px 0px #fff;
+    text-transform: uppercase;
+    line-height: 18px;
+}
+#Warnings #PanelHead p{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1em;
+    font-style: normal;
+    font-variant: normal;
+    margin: 0px;
+    font-weight: normal;
+    color: #F03;
+    line-height: 12px;
+    text-transform: uppercase;
+    overflow: visible;
+    visibility: visible;
+}
+#Warnings .LeftSpace h3{
+    color: #F03;
+}
+#Warnings a:hover .LeftSpace h3 {
+    color: #FFF;
+}
+#TmpHead {
+    height: 50px;
+    padding-top: 30px;
+}
+#TmpContainer {
+    width: 760px;
+    text-align: left;
+    background-position: left;
+    display: block;
+    padding-right: 20px;
+    padding-left: 20px;
+    margin-top: auto;
+    margin-right: auto;
+    margin-bottom: auto;
+    margin-left: auto;
+}
+#TmpWrapperL {
+    float: left;
+    width: 380px;
+    clear: none;
+}
+#TmpWrapperR {
+    float: right;
+    width: 380px;
+    clear: none;
+}
+
+#TmpContentHead {
+    margin-bottom: 10px;
+    margin-top: 20px;
+}
+
+h2 {
+    font-family: "Arial Black", Gadget, sans-serif;
+    font-size: 16px;
+    font-style: normal;
+    font-variant: normal;
+    margin: 0px;
+    font-weight: bold;
+    color: #333;
+    text-shadow: 1px 1px 0px #fff;
+    text-transform: uppercase;
+    line-height: 18px;
+}
+#TmpLeftS {
+    float: left;
+    width: 150px;
+    text-align: right;
+    font-size: 12px;
+    text-transform: uppercase;
+    height: 10px;
+    padding-top: 4px;
+    padding-right: 10px;
+    margin: 2px;
+}
+th {
+    text-transform: uppercase;
+    text-align: right;
+    padding-right: 10px;
+    width: 100px;
+}
+h5 {
+    font-size: 10px;
+    font-style: italic;
+    display: inline;
+}
+
+
+#TmpRightS {
+    float: left;
+    width: 200px;
+}
+
+
+
+
+
+/* tooltip test coda bubble */
+/* trigger button */
+.download {
+    cursor:pointer;
+    display: inline-block;
+}
+
+/* mouseover state */
+.download:hover {
+}
+
+/* clicked state */
+.download:focus {
+    background-position:0 -88px;
+}
+
+
+
+/* tooltip styling */
+.tooltip {
+    display:none;
+    height:90px;
+    width:260px;
+    font-size:11px;
+    color:#000;
+    background-image: url(../gfx/tooltip.png);
+    background-repeat: repeat;
+    padding-top: 20px;
+    padding-right: 30px;
+    padding-bottom: 10px;
+    padding-left: 30px;
+}
+
+/* a .label element inside tooltip */
+.tooltip .label {
+    color:yellow;
+    width:35px;
+}
+
+.tooltip a {
+    color:#ad4;
+    font-size:11px;
+    font-weight:bold;
+}#FreeRoom {
+    width: 70px;
+    margin-right: 20px;
+}
