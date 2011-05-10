@@ -38,8 +38,14 @@
 <div class="tab">
         <ul class="login">
             <li class="left">&nbsp;</li>
-
-            <li>NAME LASTNAME</li>
+            <?php $loggedInUser = $this->loggedInUser()?>
+            <li>
+            <?php echo empty($loggedInUser) ? "" : $loggedInUser->first_name." ".$loggedInUser->last_name?>
+            </li>
+            <li class="sep">|</li>
+            <li>
+            <?php echo $this->pageModel->hotel->name?>
+            </li>
             <li class="sep">|</li>
             <li id="toggle"><a id="open" class="open" href="#">open menu</a><a id="close" style="display: none;" class="close" href="#">Stäng Meny</a></li>
             <li class="right">&nbsp;</li>
@@ -53,7 +59,9 @@
 
 <div id="Container">
 <div id="Header"></div>
-
+<?php 
+$rooms = $this->pageModel->getHotelRooms();
+?>
 <div id="Availability">
 <div id="PanelHead"><h1>Availability</h1><p> Occ:<span class="HeadInfo">00,0%</span>Rate:<span class="HeadInfo">Std</span>Currency:<span class="HeadInfo">SEK</span></p></div>
 
@@ -67,6 +75,9 @@ $(".download").tooltip({ position: 'center right',delay: '0', offset: [0, -30]})
 });
 </script>
 
+<?php 
+foreach($rooms as $room) {
+?>
 <span class="download">
 <ul class="Link"> 
 <li >
@@ -110,12 +121,12 @@ $(".download").tooltip({ position: 'center right',delay: '0', offset: [0, -30]})
         </tr>
     </table>
 </div>
-
+<?php }//end foreach?>
  
 <ul class="AvailRooms"> 
 <li>
   <span class="LeftSpace">
-  <p>0</p></span>
+  <p><?php echo count($rooms)?></p></span>
   <span class="RightSpace">
   <h3>Total available</h3></span>
 
