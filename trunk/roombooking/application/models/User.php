@@ -20,5 +20,32 @@ class User extends Zend_Db_Table_Abstract {
 		->where("password=?", md5($password));
 		return $this->fetchRow($select);
 	}
+	
+	/**
+	 * Find user by id.
+	 * 
+	 * @param $id
+	 * @return return user
+	 */
+	public function findById($id) {
+		return $this->find($id)->current();
+	}
+	
+	/**
+	 * Find hotels which given user is the administrator.
+	 * 
+	 * @param $user
+	 * @return hotel|NULL
+	 */
+	public static function getHotel($user) {
+		$hotelUser = new HotelUser();
+		$user->setTable(new User());
+		$hotels = $user->findManyToManyRowset("Hotel", "HotelUser", "User", 'Hotel', $hotelUser->select()->where("permission_id=?", UserPermission::ADMIN));
+		if (isset($hotels)) {
+			return $hotels[0];
+		} else {
+			return null;
+		}
+	}
 }
 ?>

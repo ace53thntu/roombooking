@@ -10,7 +10,12 @@ class IndexController extends Zend_Controller_Action
 
     public function indexAction() {
     	if ($this->_helper->user->isLoggedIn()) {
-    	   
+    		$user = $this->_helper->user->getUserData();
+    		$hotel = User::getHotel($user);
+    		
+    		$pageModel = new IndexPageModel();
+    		$pageModel->hotel = $hotel;
+    		$this->view->pageModel = $pageModel;
     	} else {
     	   $this->_redirect("/user/login");
     	}
