@@ -44,7 +44,26 @@ class Hotel extends Zend_Db_Table_Abstract {
      * @return hotel object
      */
     public function addHotel($data) {
-    	
+    	$hotel = $this->findByUnique($data[self::NAME], $data[self::CITY]);
+    	if (empty($hotel)) {
+    		$id = $this->insert($data);
+    		return $this->findById($id);
+    	} else {
+    		return $hotel;
+    	}
+    }
+    
+    /**
+     * Find hotel by unique constraint.
+     * 
+     * @param $name
+     * @param $city
+     * @return return hotel object
+     */
+    public function findByUnique($name, $city) {
+    	$select = $this->select()->where("name=?", $name)
+    	->where("city=?", $city);
+    	return $this->fetchRow($select);
     }
     
     /**
