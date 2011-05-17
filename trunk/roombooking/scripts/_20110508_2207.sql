@@ -613,9 +613,10 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `booking`.`room_type`;
 CREATE TABLE  `booking`.`room_type` (
   `id` int(11) NOT NULL auto_increment,
+  `key` varchar(50) NOT NULL,
   `name` varchar(50) NOT NULL,
   PRIMARY KEY  (`id`),
-  UNIQUE KEY `room_type_unique` (`name`)
+  UNIQUE KEY `room_type_unique` (`key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
