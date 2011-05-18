@@ -1,5 +1,5 @@
 <?php
-class IndexPageModel extends PageModel {
+class ViewPageModel extends PageModel {
 	
 	public $hotel;
 	

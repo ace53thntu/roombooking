@@ -10,11 +10,11 @@ $config = Zend_Registry::get ( "config" );
 				$this->headLink ()->prependStylesheet ( $config->baseurl . '/css/fancy.css' );
 				$this->headLink ()->prependStylesheet ( $config->baseurl . '/css/slide.css' );
 				
-				$this->headScript ()->prependFile ( $config->baseurl . '/js/jquery.1.4.3.min.js' );
-				$this->headScript ()->prependFile ( $config->baseurl . '/js/jquery.fancybox-1.2.6.pack.js' );
-				$this->headScript ()->prependFile ( 'http://cdn.jquerytools.org/1.2.5/jquery.tools.min.js' );
-				$this->headScript ()->prependFile ( $config->baseurl . '/js/jquery.easing.1.3.js' );
 				$this->headScript ()->prependFile ( $config->baseurl . '/js/menuslide/slide.js' );
+				$this->headScript ()->prependFile ( $config->baseurl . '/js/jquery.easing.1.3.js' );
+				$this->headScript ()->prependFile ( 'http://cdn.jquerytools.org/1.2.5/jquery.tools.min.js' );
+				$this->headScript ()->prependFile ( $config->baseurl . '/js/jquery.fancybox-1.2.6.pack.js' );
+				$this->headScript ()->prependFile ( $config->baseurl . '/js/jquery.1.4.3.min.js' );
 				echo $this->headLink ();
 				?>  
 </head>
