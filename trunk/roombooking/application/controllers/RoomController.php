@@ -2,8 +2,10 @@
 class RoomController extends Zend_Controller_Action {
 	
 	private $hotel;
+	private $room;
 	public function init() {
 		$this->hotel = new Hotel();
+		$this->room = new Room();
 	}
 	
 	/**
@@ -14,12 +16,29 @@ class RoomController extends Zend_Controller_Action {
 			$user = $this->_helper->user->getUserData();
 			$hotel = User::getHotel($user);
             if (!empty($hotel)) {
+            	
+            	$pageModel = new ViewPageModel();
+            	$pageModel->hotel = $hotel;
+            	$pageModel->loggedInUser = $user;
+            	
 	            $form = new AddHotelRoomForm($hotel);
 	            $this->view->form = $form;
+	            $this->view->pageModel = $pageModel;
 	            
 	            if ($this->getRequest ()->isPost ()) {
 	                if ($form->isValid ( $_POST )) {
-	                	
+	                	$data = array(
+	                	  Room::TYPE => $form->getValue("type_id"),
+	                	  Room::HOTEL => $form->getValue("hotel_id"),
+	                	  Room::TOTAL => $form->getValue("total"),
+	                	  Room::MAX_PERSON => $form->getValue("max_person"),
+	                	  Room::AVAILABLE => $form->getValue("available"),
+	                	  Room::DESCRIPTION => trim($form->getValue("description"))
+	                	);
+	                	$db = Zend_Registry::get("db");
+	                	$db->beginTransaction();
+	                	$this->room->addRoom($data);
+	                	$db->commit();
 	                }
 	            }
 			} else {
@@ -29,6 +48,13 @@ class RoomController extends Zend_Controller_Action {
 		} else {
 			$this->_redirect( "/user/login?next=".urlencode($this->_helper->generator->getCurrentURI()) );
 		}
+	}
+	
+	/**
+	 * Edit room action.
+	 */
+	public function editAction() {
+		
 	}
 }
 ?>

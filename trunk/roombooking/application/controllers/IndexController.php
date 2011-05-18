@@ -13,7 +13,7 @@ class IndexController extends Zend_Controller_Action
     		$user = $this->_helper->user->getUserData();
     		$hotel = User::getHotel($user);
     		
-    		$pageModel = new IndexPageModel();
+    		$pageModel = new ViewPageModel();
     		$pageModel->hotel = $hotel;
     		$this->view->pageModel = $pageModel;
     	} else {

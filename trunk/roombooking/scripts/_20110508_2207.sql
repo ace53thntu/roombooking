@@ -590,6 +590,7 @@ CREATE TABLE  `booking`.`room` (
   `description` text,
   `available` smallint(6) NOT NULL,
   PRIMARY KEY  (`id`),
+  UNIQUE KEY `room_unique` (`type_id`, `hotel_id`),
   KEY `room_type_fk_constraint` (`type_id`),
   KEY `room_hotel_fk_constraint` (`hotel_id`),
   CONSTRAINT `room_hotel_fk_constraint` FOREIGN KEY (`hotel_id`) REFERENCES `hotel` (`id`),
