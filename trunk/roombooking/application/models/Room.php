@@ -1,6 +1,7 @@
 <?php
 class Room extends Zend_Db_Table_Abstract {
 	
+	const ID = "id";
 	const HOTEL = "hotel_id";
 	const TYPE = "type_id";
 	const TOTAL = "total";
@@ -32,6 +33,25 @@ class Room extends Zend_Db_Table_Abstract {
     		$room = $this->findById($id);
     	}
     	return $room;
+    }
+    
+    /**
+     * Update room info.
+     * 
+     * @param $data
+     * @return room
+     */
+    public function updateRoom($data) {
+    	$room = $this->findById($data[self::ID]);
+    	if (!empty($room)) {
+    		if (!empty($data[self::AVAILABLE])) {
+    			$room->avaiable = $data[self::AVAILABLE];
+    			$room->save(); 
+    		} else {
+    			return $room;
+    		}
+    	}
+    	return null;
     }
     
     /**
