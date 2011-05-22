@@ -75,12 +75,12 @@ foreach($rooms as $room) {
 <li >
 <a class="zoom3"  href="room/edit/rid/<?php echo $room->id?>">
 <span class="LeftSpace">
-    <p>0</p>
+    <p><?php echo $room->available?></p>
 </span>
 <span class="RightSpace">
 <h3>Presidential suite</h3>
 
-<p>Discount:<span class="DiscComCol">200</span>commission:<span class="DiscComCol">15%</span></p>
+<p>Discount:<span class="DiscComCol"><?php echo Room::getDiscount($room)->price?></span>commission:<span class="DiscComCol">15%</span></p>
 </span>
 </a>
 </li>

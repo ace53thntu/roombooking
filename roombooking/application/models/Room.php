@@ -12,6 +12,10 @@ class Room extends Zend_Db_Table_Abstract {
 	protected $_primary = "id";
 	protected $_name = "room";
 	
+	protected $_dependentTables = array(
+       'Discount'
+    );
+	
 	protected $_referenceMap = array (
     'Hotel' => array (
         'columns' => 'hotel_id', 
@@ -45,8 +49,9 @@ class Room extends Zend_Db_Table_Abstract {
     	$room = $this->findById($data[self::ID]);
     	if (!empty($room)) {
     		if (!empty($data[self::AVAILABLE])) {
-    			$room->avaiable = $data[self::AVAILABLE];
+    			$room->available = $data[self::AVAILABLE];
     			$room->save(); 
+    			return $room;
     		} else {
     			return $room;
     		}
@@ -75,6 +80,14 @@ class Room extends Zend_Db_Table_Abstract {
     	$select = $this->select()->where("hotel_id=?", $hotel_id)
     	->where("type_id=?", $type_id);
     	return $this->fetchRow($select);
+    }
+    
+    /**
+     * Get room's discount.
+     * @param $room
+     */
+    public static function getDiscount($room) {
+    	return $room->findDependentRowset("Discount", "Room")->current();
     }
 }
 ?>
