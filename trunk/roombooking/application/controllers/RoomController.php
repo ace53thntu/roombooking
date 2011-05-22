@@ -3,9 +3,11 @@ class RoomController extends Zend_Controller_Action {
 	
 	private $hotel;
 	private $room;
+	private $discount;
 	public function init() {
 		$this->hotel = new Hotel();
 		$this->room = new Room();
+		$this->discount = new Discount();
 	}
 	
 	/**
@@ -80,7 +82,10 @@ class RoomController extends Zend_Controller_Action {
                         );
                         $room = $this->room->updateRoom($data);
                         // add discount if any.
-                        
+                        $discount = $form->getValue("discount");
+                        if (!empty($discount)) {
+                        	$this->discount->addOrUpdateDiscount($room->id, $discount);
+                        }
                         $db->commit();
                     }
                 }

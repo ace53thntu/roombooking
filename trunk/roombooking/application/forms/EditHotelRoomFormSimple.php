@@ -19,7 +19,7 @@ class EditHotelRoomFormSimple extends Zend_Form {
 		$element->setValue($this->room->id);
 		$this->addElement($element);
 		
-		$element = new Zend_Form_Element_Text("avaialbe");
+		$element = new Zend_Form_Element_Text("available");
 		$element->setLabel("Free Room");
 		$element->setRequired(true);
 		$this->addElement($element);
