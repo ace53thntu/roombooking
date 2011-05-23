@@ -1,3 +1,28 @@
+/*!40000 ALTER TABLE `user` DISABLE KEYS */;
+LOCK TABLES `user` WRITE;
+INSERT INTO `booking`.`user` VALUES  (1,'lhj1982','670b14728ad9902aecba32e22fa4f6bd','James','Lee','','');
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `user` ENABLE KEYS */;
+
+/*!40000 ALTER TABLE `hotel` DISABLE KEYS */;
+LOCK TABLES `hotel` WRITE;
+INSERT INTO `booking`.`hotel` VALUES  (1,'hotel1','hotel1','','test 1','stockholm','11147',1,'center');
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `hotel` ENABLE KEYS */;
+
+/*!40000 ALTER TABLE `permission` DISABLE KEYS */;
+LOCK TABLES `permission` WRITE;
+INSERT INTO `booking`.`permission` VALUES  (1,'administrator');
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `permission` ENABLE KEYS */;
+
+/*!40000 ALTER TABLE `hotel_user` DISABLE KEYS */;
+LOCK TABLES `hotel_user` WRITE;
+INSERT INTO `booking`.`hotel_user` VALUES  (1,1,1,1);
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `hotel_user` ENABLE KEYS */;
+
+
 INSERT INTO room_type (`key`, name) VALUES 
     ("SIN", "Single Room"),
     ("DBL", "Double Room");
