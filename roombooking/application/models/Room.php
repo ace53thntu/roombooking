@@ -87,7 +87,12 @@ class Room extends Zend_Db_Table_Abstract {
      * @param $room
      */
     public static function getDiscount($room) {
-    	return $room->findDependentRowset("Discount", "Room")->current();
+    	$discounts = $room->findDependentRowset("Discount", "Room");
+    	if (count($discounts) > 0) {
+    		return $discounts->current()->discount;
+    	} else {
+    		return 0;
+    	}
     }
 }
 ?>
