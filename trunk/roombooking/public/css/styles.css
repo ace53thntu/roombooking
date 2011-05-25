@@ -1,0 +1,298 @@
+/* everything is constructed with a single background image */
+
+/* root element for tabs */
+#flowtabs {
+	/* dimensions */
+	width:960px;
+	height:31px !important;
+	padding:0;
+	/* IE6 specific branch (prefixed with "_") */
+	_margin-bottom:-2px;
+	margin-top: 10px;
+	margin-right: 0;
+	margin-bottom: 0;
+	margin-left: 0;
+	text-align: center;
+}
+
+/* single tab */
+#flowtabs li {
+	float:left;
+	margin:0;
+	padding:0;
+	text-indent:0;
+	list-style-type:none;
+	clear: left;
+}
+
+/* a- tag inside single tab */
+#flowtabs li a {
+	background: url(/tools/img/tabs/blue_panes.jpg) no-repeat;
+	display:block;
+	/* [disabled]height: 31px; */
+	width: 130px;
+	padding:0px;
+	margin:0px;
+	/* font decoration */
+	color:#3F0;
+	font-size:11px;
+	/* [disabled]line-height:33px; */
+	text-align:center;
+	text-decoration:none;
+	font-family: "Arial Black", Gadget, sans-serif;
+}
+
+/* adjust the background image position on each tab */
+
+/* mouseover state */
+#flowtabs a:hover 		{
+	color:#C03;
+}
+
+/* currently selected tabs */
+#flowtabs a.current		{
+	cursor:default;
+	color:#fff;
+	/* [disabled]line-height:34px; */
+}
+
+/* panes */
+#flowpanes {
+	width:740px;
+	height:200px;
+	border-right-width: 1px;
+	border-right-style: solid;
+	border-right-color: #000;
+	padding: 0px;
+	margin-top: 20px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 0px;/* [disabled]background-color: #FFF; */
+}
+
+
+/* single pane */
+#flowpanes div {
+	display:none;
+	color:#222;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	margin-left: -1px;
+	margin-right: 0px;
+}
+
+/* some decorations for elements inside single pane */
+#flowpanes div h2 {
+	font-weight:normal;
+	color:#FFF;
+	letter-spacing:1px;
+	font-size:22px;
+	text-transform: uppercase;
+	clear: both;
+	float: left;
+	margin-top: 0px;
+	margin-right: 0;
+	margin-bottom: 0;
+	margin-left: 0;
+	padding-top: 0px;
+	text-shadow: none;
+	
+}
+#flowpanes div p {
+	font-weight:normal;
+	color:#222;
+	letter-spacing:1px;
+	margin:0px;
+	font-size:11px;
+	text-transform: uppercase;
+}
+
+#flowpanes a {
+	color:#cc9;		
+	font-size:14px;
+}
+
+#flowpanes p, #flowpanes samp {
+	color:#ccc;		
+}
+
+/* override the root element to enable scrolling */ 
+#flowpanes {
+	position:relative;
+	overflow:hidden;
+	clear:none;
+} 
+ 
+/* override single pane */ 
+#flowpanes div {
+	float:left;
+	display:block;
+	width:740px;
+	cursor:pointer;
+	font-size:14px;
+	padding-left: 0px;
+	padding-right: 10px;
+} 
+
+#flowpanes div #MenuDiv {
+	float: left;
+	width: 180px;
+	padding-left: 40px;
+	border-left-width: 1px;
+	border-left-style: solid;
+	border-left-color: #CCC;
+	padding-right: 15px;
+	padding-top: 0px;
+	text-shadow: none;/* [disabled]background-color: #FFF; */
+}
+
+#flowpanes div #MenuDiv ul {
+	margin: 0px;
+	padding: 0px;
+}
+
+#flowpanes div #MenuDiv li {
+	color:#3C3;
+	font-size:11px;
+	letter-spacing:1px;
+	padding:0px;
+	margin:0px;
+	text-transform: uppercase;
+	text-decoration:none;
+	list-style-type:none;
+	text-align:left;
+}
+
+#flowpanes div #MenuDiv li a {
+	color:#000;
+	font-size:11px;
+	letter-spacing:1px;
+	padding:0px;
+	margin:0px;
+	text-transform: uppercase;
+	text-align:left;
+	text-decoration:none;
+	list-style-type:none;
+	font-weight: normal;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+#flowpanes div #MenuDiv li a:hover {
+	color:#537188;
+	font-size:11px;
+	letter-spacing:1px;
+	padding:0px;
+	margin:0px;
+	text-transform: uppercase;
+	text-align:left;
+	text-decoration:none;
+	list-style-type:none;
+}
+#flowpanes div #MenuDivTitle {
+	float: left;
+	clear: both;
+	padding-top: 0px;
+	padding-right: 0px;
+	padding-bottom: 10px;
+	padding-left: 40px;
+	margin: 0px;
+	text-shadow: none;
+}
+
+#LoggedIn {
+	float: right;
+	width: 180px;
+	clear: none;
+	height: 200px;
+	margin-top: 20px;
+}
+
+#LoggedIn #LoggedInTitle {
+	float: left;
+	clear: both;
+	padding-top: 0px;
+	padding-right: 0px;
+	padding-bottom: 10px;
+	padding-left: 0px;
+	margin: 0px;
+	width: 180px;
+}
+
+#LoggedIn h2 {
+	font-weight:normal;
+	color:#FFF;
+	letter-spacing:1px;
+	font-size:22px;
+	text-transform: uppercase;
+	clear: left;
+	float: left;
+	margin-top: 0px;
+	margin-right: 0;
+	margin-bottom: 0;
+	margin-left: 0;
+	padding-top: 0px;
+	text-shadow: none;
+}
+
+#LoggedIn p {
+	font-weight:normal;
+	color:#FFF;
+	letter-spacing:1px;
+	margin:0px;
+	font-size:11px;
+	text-transform: uppercase;
+}
+#LoggedIn ul {
+	margin: 0px;
+	padding: 0px;
+	text-align:left;
+}
+
+#LoggedIn li {
+	color:#FFF;
+	font-size:11px;
+	letter-spacing:1px;
+	padding:0px;
+	margin:0px;
+	text-transform: uppercase;
+	text-decoration:none;
+	list-style-type:none;
+	text-align:left;
+}
+
+#LoggedIn li a {
+	color:#222;
+	font-size:11px;
+	letter-spacing:1px;
+	padding:0px;
+	margin:0px;
+	text-transform: uppercase;
+	text-align:left;
+	text-decoration:none;
+	list-style-type:none;
+}
+
+#LoggedIn li a:hover {
+	color:#537188;
+	font-size:11px;
+	letter-spacing:1px;
+	padding:0px;
+	margin:0px;
+	text-transform: uppercase;
+	text-align:left;
+	text-decoration:none;
+	list-style-type:none;
+}
+/* our additional wrapper element for the items */ 
+#flowpanes .items { 
+    width:20000em; 
+    position:absolute; 
+    clear:both; 
+    margin:0; 
+    padding:0; 
+} 
+ 
+#flowpanes .less, #flowpanes .less a {
+	color:#996 !important;
+	font-size:11px;
+}
