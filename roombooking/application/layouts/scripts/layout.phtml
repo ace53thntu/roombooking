@@ -12,6 +12,7 @@ $config = Zend_Registry::get ( "config" );
 				$this->headLink ()->prependStylesheet ( $config->baseurl . '/css/fancy.css' );
 				$this->headLink ()->prependStylesheet ( $config->baseurl . '/css/slide.css' );
 				$this->headLink ()->prependStylesheet ( $config->baseurl . '/css/styles.css' );
+				$this->headLink ()->prependStylesheet ( $config->baseurl . '/css/template.css' );
 				
 				$this->headScript ()->prependFile ( $config->baseurl . '/js/liveclock.js' );
 				$this->headScript ()->prependFile ( $config->baseurl . '/js/menuslide/slide.js' );
