@@ -331,6 +331,28 @@ CREATE TABLE `booking` (
   CONSTRAINT `booking_fk_constraint6` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`id`),
   CONSTRAINT `booking_fk_constraint9` FOREIGN KEY (`calendar_id`) REFERENCES `calendar` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='booking record';
+
+
+CREATE  TABLE `booking`.`hotel_contactperson` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `hotel_id` INT(11) NOT NULL ,
+  `name` VARCHAR(45) NOT NULL ,
+  `email` VARCHAR(45) NOT NULL ,
+  `phone` VARCHAR(45) NOT NULL ,
+  `title` VARCHAR(45) NULL ,
+  `created` DATETIME NOT NULL ,
+  `modified` DATETIME NULL ,
+  PRIMARY KEY (`id`) ,
+  INDEX `hotel_contactperson_fk_constraint` (`hotel_id` ASC) ,
+  CONSTRAINT `hotel_contactperson_fk_constraint`
+    FOREIGN KEY (`hotel_id` )
+    REFERENCES `booking`.`hotel` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_general_ci;
+
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -353,3 +375,9 @@ ALTER TABLE `hotel`
     ADD COLUMN `fax` VARCHAR(50) NOT NULL AFTER `phone2`,
     ADD COLUMN `email` VARCHAR(50) NOT NULL AFTER `fax`,
     ADD COLUMN `website` VARCHAR(100) NULL DEFAULT NULL AFTER `email`;
+
+ALTER TABLE `hotel`
+    CHANGE COLUMN `chain` `chain` ENUM('None','Hilton','Elite','Sweden','First','Rica','Clarion','Nordic','Best Western','Other') NULL DEFAULT 'None' AFTER `city_part`;
+    
+ALTER TABLE `user`
+    ADD COLUMN `phone` VARCHAR(20) NULL DEFAULT NULL AFTER `email`;

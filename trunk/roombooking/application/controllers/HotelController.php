@@ -24,7 +24,13 @@ class HotelController extends Zend_Controller_Action {
 	            	  Hotel::POST_ADDRESS => trim($form->getValue("post_address")),
 	            	  Hotel::POST_CODE => trim($form->getValue("post_code")),
 	            	  Hotel::CITY => $form->getValue("city"),
-	            	  Hotel::CITY_PART => $form->getValue("city_part")
+	            	  Hotel::CITY_PART => $form->getValue("city_part"),
+	            	  Hotel::CHAIN => $form->getValue("chain"),
+	            	  Hotel::PHONE1 => $form->getValue("phone1"),
+	            	  Hotel::PHONE2 => $form->getValue("phone2"),
+	            	  Hotel::FAX => $form->getValue("fax"),
+	            	  Hotel::EMAIL => $form->getValue("email"),
+	            	  Hotel::WEBSITE => $form->getValue("website")
 	            	);
 	            	
 	            	$db = Zend_Registry::get("db");

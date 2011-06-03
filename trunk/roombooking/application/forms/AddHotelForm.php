@@ -78,6 +78,54 @@ class AddHotelForm extends Zend_Form {
         $element->setRegisterInArrayValidator(false);
         $this->addElement($element);
         
+        $element = new Zend_Form_Element_Select("chain");
+        $element->setLabel("Chain");
+        $element->addMultiOptions(
+        array(
+        HotelChain::NONE=>HotelChain::NONE, 
+        HotelChain::HILTON=>HotelChain::HILTON, 
+        HotelChain::ELITE=>HotelChain::ELITE, 
+        HotelChain::SWEDEN=>HotelChain::SWEDEN, 
+        HotelChain::FIRST=>HotelChain::FIRST,
+        HotelChain::RICA=>HotelChain::RICA,
+        HotelChain::CLARION=>HotelChain::CLARION,
+        HotelChain::NORDIC=>HotelChain::NORDIC,
+        HotelChain::BEST_WESTERN=>HotelChain::BEST_WESTERN,
+        HotelChain::OTHER=>HotelChain::OTHER
+        )
+        );
+        $element->setRegisterInArrayValidator(false);
+        $this->addElement($element);
+        
+        $element = new Zend_Form_Element_Text("phone1");
+        $element->setLabel("Telephone");
+        $element->setRequired(true);
+        $this->addElement($element);
+        
+        $element = new Zend_Form_Element_Text("phone2");
+        $element->setLabel("Telephone 2");
+        $this->addElement($element);
+        
+        $element = new Zend_Form_Element_Text("fax");
+        $element->setLabel("Fax");
+        $this->addElement($element);
+        
+        $element = new Zend_Form_Element_Text("email");
+        $element->setLabel("Email");
+        $element->setRequired(true);
+        $this->addElement($element);
+        
+        $element = new Zend_Form_Element_Text("website");
+        $element->setLabel("WWW");
+        $this->addElement($element);
+        
+        // contact information
+        $element = new Zend_Form_Element_Text("name");
+        $element->setLabel("Contact Name");
+        $element->setRequired(true);
+        $this->addElement($element);
+        
+        
         
         $element = new Zend_Form_Element_Submit("Submit");
         $this->addElement($element);
