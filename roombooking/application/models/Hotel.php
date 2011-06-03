@@ -10,6 +10,12 @@ class Hotel extends Zend_Db_Table_Abstract {
 	const POST_CODE = "post_code";
 	const CITY = "city";
 	const CITY_PART = "city_part";
+	const CHAIN = "chain";
+	const PHONE1 = "phone1";
+	const PHONE2 = "phone2";
+	const FAX = "fax";
+	const EMAIL = "email";
+	const WEBSITE = "website";
 	
 	protected $_primary = "id";
 	protected $_name = "hotel";
