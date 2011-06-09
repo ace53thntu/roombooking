@@ -56,7 +56,7 @@ class RoomController extends Zend_Controller_Action {
 	 * Edit room action.
 	 */
 	public function editAction() {
-	if ($this->_helper->user->isLoggedIn()) {
+	   if ($this->_helper->user->isLoggedIn()) {
             $user = $this->_helper->user->getUserData();
             $hotel = User::getHotel($user);
             if (!empty($hotel)) {
@@ -87,6 +87,38 @@ class RoomController extends Zend_Controller_Action {
                         	$this->discount->addOrUpdateDiscount($room->id, $discount);
                         }
                         $db->commit();
+                    }
+                }
+            } else {
+                throw new Zend_Exception("No hotel specified!");
+                
+            }
+        } else {
+            $this->_redirect( "/user/login?next=".urlencode($this->_helper->generator->getCurrentURI()) );
+        }
+	}
+	
+	/**
+	 * Send booking request.
+	 */
+	public function sendrequestAction() {
+	   if ($this->_helper->user->isLoggedIn()) {
+            $user = $this->_helper->user->getUserData();
+            $hotel = User::getHotel($user);
+            if (!empty($hotel)) {
+                
+                $pageModel = new ViewPageModel();
+                $pageModel->hotel = $hotel;
+                $pageModel->loggedInUser = $user;
+                $roomId = $this->_getParam("rid");
+                $room = $this->room->findById($roomId);
+                $form = new SendRequestForm($hotel, $room);
+                $this->view->form = $form;
+                $this->view->pageModel = $pageModel;
+                
+                if ($this->getRequest ()->isPost ()) {
+                    if ($form->isValid ( $_POST )) {
+                        
                     }
                 }
             } else {
