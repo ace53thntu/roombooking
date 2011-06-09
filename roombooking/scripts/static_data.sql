@@ -290,3 +290,14 @@ UNLOCK TABLES;
 INSERT INTO rate_name (`key`, name) VALUES 
 ("STD", "Standard Rate"),
 ("SPE", "Special Rate");
+
+INSERT INTO calendar (id, from, to, name, description) VALUES 
+(1, '2011-05-01 03:00:00', '2011-10-30 03:00:00', 'summer time', 'Summer time');
+
+INSERT INTO calendar_price (id, calendar_id, room_id, price, created, modified) VALUES 
+(1, 1, 1, 300, now(), now());
+
+INSERT INTO rate (id, room_id, person_number, rate_name, price, created, modified) VALUES 
+(1, 1, 1, 3, 300, now(), now()),
+(2, 1, 2, 3, 300, now(), now()),
+(3, 1, 1, 4, 400, now(), now());
