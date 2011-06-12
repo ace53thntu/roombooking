@@ -333,26 +333,6 @@ CREATE TABLE `booking` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='booking record';
 
 
-CREATE  TABLE `booking`.`hotel_contactperson` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT ,
-  `hotel_id` INT(11) NOT NULL ,
-  `name` VARCHAR(45) NOT NULL ,
-  `email` VARCHAR(45) NOT NULL ,
-  `phone` VARCHAR(45) NOT NULL ,
-  `title` VARCHAR(45) NULL ,
-  `created` DATETIME NOT NULL ,
-  `modified` DATETIME NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `hotel_contactperson_fk_constraint` (`hotel_id` ASC) ,
-  CONSTRAINT `hotel_contactperson_fk_constraint`
-    FOREIGN KEY (`hotel_id` )
-    REFERENCES `booking`.`hotel` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8
-COLLATE = utf8_general_ci;
-
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -379,5 +359,22 @@ ALTER TABLE `hotel`
 ALTER TABLE `hotel`
     CHANGE COLUMN `chain` `chain` ENUM('None','Hilton','Elite','Sweden','First','Rica','Clarion','Nordic','Best Western','Other') NULL DEFAULT 'None' AFTER `city_part`;
     
-ALTER TABLE `user`
-    ADD COLUMN `phone` VARCHAR(20) NULL DEFAULT NULL AFTER `email`;
+    
+ALTER TABLE `booking`.`hotel` ADD COLUMN `contact_name` VARCHAR(100)  NOT NULL AFTER `website`,
+ ADD COLUMN `contact_title` VARCHAR(50)  AFTER `contact_name`,
+ ADD COLUMN `contact_phone` VARCHAR(50)  NOT NULL AFTER `contact_title`,
+ ADD COLUMN `contact_email` VARCHAR(50)  NOT NULL AFTER `contact_phone`,
+ ADD COLUMN `created` DATETIME  NOT NULL AFTER `contact_email`,
+ ADD COLUMN `modified` DATETIME  NOT NULL AFTER `created`;
+ 
+ 
+ALTER TABLE `booking`.`room` CHANGE COLUMN `type_id` `key` VARCHAR(3)  NOT NULL COMMENT 'room category key, 3 chars',
+ CHANGE COLUMN `max_person` `max_adults` SMALLINT(6)  NOT NULL,
+ ADD COLUMN `name` VARCHAR(50)  NOT NULL AFTER `id`,
+ ADD COLUMN `max_children` SMALLINT(6)  NOT NULL DEFAULT 0 AFTER `max_adults`,
+ DROP INDEX `room_unique`,
+ ADD UNIQUE INDEX `room_unique` USING BTREE(`hotel_id`, `key`)
+, DROP INDEX `room_type_fk_constraint`,
+ DROP FOREIGN KEY `room_type_fk_constraint`;
+ 
+DROP TABLE room_type;

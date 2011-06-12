@@ -30,10 +30,12 @@ class RoomController extends Zend_Controller_Action {
 	            if ($this->getRequest ()->isPost ()) {
 	                if ($form->isValid ( $_POST )) {
 	                	$data = array(
-	                	  Room::TYPE => $form->getValue("type_id"),
+	                	  Room::NAME => trim($form->getValue(Room::NAME)),
+	                	  Room::KEY => strtoupper(trim($form->getValue("key"))),
 	                	  Room::HOTEL => $form->getValue("hotel_id"),
-	                	  Room::TOTAL => $form->getValue("total"),
-	                	  Room::MAX_PERSON => $form->getValue("max_person"),
+	                	  Room::TOTAL => $form->getValue("available"),
+	                	  Room::MAX_ADULTS => $form->getValue(Room::MAX_ADULTS),
+	                	  Room::MAX_CHILDREN => $form->getValue(Room::MAX_CHILDREN),
 	                	  Room::AVAILABLE => $form->getValue("available"),
 	                	  Room::DESCRIPTION => trim($form->getValue("description"))
 	                	);
@@ -96,6 +98,26 @@ class RoomController extends Zend_Controller_Action {
         } else {
             $this->_redirect( "/user/login?next=".urlencode($this->_helper->generator->getCurrentURI()) );
         }
+	}
+	
+	/**
+	 * Room category price action.
+	 */
+	public function roompriceAction() {
+		if ($this->_helper->user->isLoggedIn()) {
+			$roomId = $this->_getParam("rid");
+			$room = $this->room->findById($roomId);
+			if (isset($room)) {
+				$pageModel = new RoomViewPageModel();
+				$pageModel->loggedInUser = $this->_helper->user->getUserData();
+				$pageModel->room = $room;
+				$this->view->pageModel = $pageModel;
+			} else {
+				throw new Zend_Exception("Room not found! ID:" + $roomId);
+			}
+		} else {
+			$this->_redirect( "/user/login?next=".urlencode($this->_helper->generator->getCurrentURI()) );
+		}
 	}
 	
 	/**

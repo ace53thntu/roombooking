@@ -120,11 +120,24 @@ class AddHotelForm extends Zend_Form {
         $this->addElement($element);
         
         // contact information
-        $element = new Zend_Form_Element_Text("name");
+        $element = new Zend_Form_Element_Text("contact_name");
         $element->setLabel("Contact Name");
         $element->setRequired(true);
         $this->addElement($element);
         
+        $element = new Zend_Form_Element_Text("contact_title");
+        $element->setLabel("Title");
+        $this->addElement($element);
+        
+        $element = new Zend_Form_Element_Text("contact_phone");
+        $element->setLabel("Phone");
+        $element->setRequired(true);
+        $this->addElement($element);
+        
+        $element = new Zend_Form_Element_Text("contact_email");
+        $element->setLabel("Email");
+        $element->setRequired(true);
+        $this->addElement($element);
         
         
         $element = new Zend_Form_Element_Submit("Submit");
