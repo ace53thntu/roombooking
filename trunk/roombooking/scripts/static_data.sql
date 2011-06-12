@@ -1,12 +1,12 @@
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
 LOCK TABLES `user` WRITE;
-INSERT INTO `booking`.`user` VALUES  (1,'lhj1982','670b14728ad9902aecba32e22fa4f6bd','James','Lee','','');
+INSERT INTO `booking`.`user` VALUES  (1,'lhj1982','670b14728ad9902aecba32e22fa4f6bd','James','Lee','','','');
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 
 /*!40000 ALTER TABLE `hotel` DISABLE KEYS */;
 LOCK TABLES `hotel` WRITE;
-INSERT INTO `booking`.`hotel` VALUES  (1,'hotel1','hotel1','','test 1','stockholm','11147',1,'center');
+INSERT INTO `booking`.`hotel` VALUES  (1,'hotel1','hotel1','','test 1','stockholm','11147',1,'center','none','', '', '', '' ,'', '','','','', now(), now());
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `hotel` ENABLE KEYS */;
 

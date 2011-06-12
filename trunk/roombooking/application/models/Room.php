@@ -3,9 +3,11 @@ class Room extends Zend_Db_Table_Abstract {
 	
 	const ID = "id";
 	const HOTEL = "hotel_id";
-	const TYPE = "type_id";
+	const NAME = "name";
+	const KEY = "key";
 	const TOTAL = "total";
-	const MAX_PERSON = "max_person";
+	const MAX_ADULTS = "max_adults";
+	const MAX_CHILDREN = "max_children";
 	const DESCRIPTION = "description";
 	const AVAILABLE = "available";
 	
@@ -31,7 +33,7 @@ class Room extends Zend_Db_Table_Abstract {
      * @return room object
      */
     public function addRoom($data) {
-    	$room = $this->findByUnique($data[self::HOTEL], $data[self::TYPE]);
+    	$room = $this->findByUnique($data[self::HOTEL], $data[self::KEY]);
     	if (empty($room)) {
     		$id = $this->insert($data);
     		$room = $this->findById($id);
@@ -73,12 +75,12 @@ class Room extends Zend_Db_Table_Abstract {
      * Find room by unique constraint.
      * 
      * @param $hotel_id
-     * @param $type_id
+     * @param $key
      * @return return room
      */
-    public function findByUnique($hotel_id, $type_id) {
+    public function findByUnique($hotel_id, $key) {
     	$select = $this->select()->where("hotel_id=?", $hotel_id)
-    	->where("type_id=?", $type_id);
+    	->where("`key`=?", $key);
     	return $this->fetchRow($select);
     }
     
@@ -93,6 +95,16 @@ class Room extends Zend_Db_Table_Abstract {
     	} else {
     		return 0;
     	}
+    }
+    
+    /**
+     * Get hotel of the room.
+     * 
+     * @param $room
+     * @return return hotel
+     */
+    public static function getHotel($room) {
+    	return $room->findParentRow ( "Hotel", "Hotel" );
     }
 }
 ?>

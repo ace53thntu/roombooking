@@ -17,6 +17,13 @@ class Hotel extends Zend_Db_Table_Abstract {
 	const EMAIL = "email";
 	const WEBSITE = "website";
 	
+	const CONTACT_NAME = "contact_name";
+	const CONTACT_TITLE = "contact_title";
+	const CONTACT_PHONE = "contact_phone";
+	const CONTACT_EMAIL = "contact_email";
+	const CREATED = "created";
+	const MODIFIED = "modified";
+	
 	protected $_primary = "id";
 	protected $_name = "hotel";
 	

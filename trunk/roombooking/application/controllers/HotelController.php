@@ -30,7 +30,13 @@ class HotelController extends Zend_Controller_Action {
 	            	  Hotel::PHONE2 => $form->getValue("phone2"),
 	            	  Hotel::FAX => $form->getValue("fax"),
 	            	  Hotel::EMAIL => $form->getValue("email"),
-	            	  Hotel::WEBSITE => $form->getValue("website")
+	            	  Hotel::WEBSITE => $form->getValue("website"),
+	            	  Hotel::CONTACT_NAME => $form->getValue(Hotel::CONTACT_NAME),
+	            	  Hotel::CONTACT_TITLE => $form->getValue(Hotel::CONTACT_TITLE),
+	            	  Hotel::CONTACT_EMAIL => $form->getValue(Hotel::CONTACT_EMAIL),
+	            	  Hotel::CONTACT_PHONE => $form->getValue(Hotel::CONTACT_PHONE),
+	            	  Hotel::CREATED => $this->_helper->generator->generateCurrentTime(),
+	            	  Hotel::MODIFIED => $this->_helper->generator->generateCurrentTime()
 	            	);
 	            	
 	            	$db = Zend_Registry::get("db");
