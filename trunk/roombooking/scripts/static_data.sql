@@ -1,6 +1,6 @@
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
 LOCK TABLES `user` WRITE;
-INSERT INTO `booking`.`user` VALUES  (1,'lhj1982','670b14728ad9902aecba32e22fa4f6bd','James','Lee','','','');
+INSERT INTO `booking`.`user` VALUES  (1,'lhj1982','670b14728ad9902aecba32e22fa4f6bd','James','Lee','','');
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 
@@ -23,9 +23,9 @@ UNLOCK TABLES;
 /*!40000 ALTER TABLE `hotel_user` ENABLE KEYS */;
 
 
-INSERT INTO room_type (`key`, name) VALUES 
-    ("SIN", "Single Room"),
-    ("DBL", "Double Room");
+-- INSERT INTO room_type (`key`, name) VALUES 
+--    ("SIN", "Single Room"),
+--    ("DBL", "Double Room");
     
 /*!40000 ALTER TABLE `country` DISABLE KEYS */;
 LOCK TABLES `country` WRITE;
@@ -291,7 +291,7 @@ INSERT INTO rate_name (`key`, name) VALUES
 ("STD", "Standard Rate"),
 ("SPE", "Special Rate");
 
-INSERT INTO calendar (id, from, to, name, description) VALUES 
+INSERT INTO calendar (id, `from`, `to`, name, description) VALUES 
 (1, '2011-05-01 03:00:00', '2011-10-30 03:00:00', 'summer time', 'Summer time');
 
 INSERT INTO calendar_price (id, calendar_id, room_id, price, created, modified) VALUES 

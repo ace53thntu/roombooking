@@ -1,1 +1,14 @@
 <h1>Price definition of Room <?php echo $this->pageModel->room->name?>, Hotel <?php echo $this->pageModel->getHotel()->name?></h1>
+
+<strong>Calendar:</strong>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+<?php 
+foreach($this->pageModel->getCalendarPrices() as $calendarPrice) {
+?>
+<tr>
+<td></td>
+</tr>
+<?php }?>
+</table>
+<hr/>
+<strong>Rate</strong>
