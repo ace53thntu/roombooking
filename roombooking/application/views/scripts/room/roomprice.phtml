@@ -1,12 +1,17 @@
 <h1>Price definition of Room <?php echo $this->pageModel->room->name?>, Hotel <?php echo $this->pageModel->getHotel()->name?></h1>
 
 <strong>Calendar:</strong>
-<table border="0" cellspacing="0" cellpadding="0" width="100%">
+<table border="0" cellspacing="0" cellpadding="0" width="800">
+<tr>
+<td>Period</td>
+<td>Price</td>
+</tr>
 <?php 
-foreach($this->pageModel->getCalendarPrices() as $calendarPrice) {
+foreach($this->pageModel->getCalendarPrices() as $calendarPriceDTO) {
 ?>
 <tr>
-<td></td>
+<td><?php echo $calendarPriceDTO->calendar->name?> (<?php echo $calendarPriceDTO->calendar->from?> - <?php echo $calendarPriceDTO->calendar->to?>)</td>
+<td><?php echo $calendarPriceDTO->price?></td>
 </tr>
 <?php }?>
 </table>

@@ -15,7 +15,8 @@ class Room extends Zend_Db_Table_Abstract {
 	protected $_name = "room";
 	
 	protected $_dependentTables = array(
-       'Discount'
+       'Discount',
+	   'CalendarPrice'
     );
 	
 	protected $_referenceMap = array (
@@ -105,6 +106,16 @@ class Room extends Zend_Db_Table_Abstract {
      */
     public static function getHotel($room) {
     	return $room->findParentRow ( "Hotel", "Hotel" );
+    }
+    
+    /**
+     * Return calendar price of given room.
+     * 
+     * @param $room
+     * @return return calendar prices
+     */
+    public static function getCalendarPrices($room) {
+    	return $room->findDependentRowset("CalendarPrice", "Room");
     }
 }
 ?>
