@@ -121,6 +121,39 @@ class RoomController extends Zend_Controller_Action {
 	}
 	
 	/**
+	 * Add calendar price.
+	 */
+	public function addcalendarpriceAction() {
+	   if ($this->_helper->user->isLoggedIn()) {
+            $roomId = $this->_getParam("rid");
+            $room = $this->room->findById($roomId);
+            if (isset($room)) {
+            	$form = new AddCalendarPriceForm($room);
+            	$this->view->form = $form;
+            	
+            	if ($this->getRequest ()->isPost ()) {
+                    if ($form->isValid ( $_POST )) {
+                        $roomId = $form->getValue("room_id");
+                        
+                        $db = Zend_Registry::get("db");
+                        $db->beginTransaction();
+                        
+                        $db->commit();
+                    }
+            	}
+//                $pageModel = new RoomViewPageModel();
+//                $pageModel->loggedInUser = $this->_helper->user->getUserData();
+//                $pageModel->room = $room;
+//                $this->view->pageModel = $pageModel;
+            } else {
+                throw new Zend_Exception("Room not found! ID:" + $roomId);
+            }
+        } else {
+            $this->_redirect( "/user/login?next=".urlencode($this->_helper->generator->getCurrentURI()) );
+        }
+	}
+	
+	/**
 	 * Send booking request.
 	 */
 	public function sendrequestAction() {
