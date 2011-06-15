@@ -14,6 +14,11 @@ foreach($this->pageModel->getCalendarPrices() as $calendarPriceDTO) {
 <td><?php echo $calendarPriceDTO->price?></td>
 </tr>
 <?php }?>
+<tr>
+<td colspan="2">
+<a href="<?php echo $this->url(array("controller"=>"room", "action"=>"addcalendarprice", "rid"=>$this->pageModel->room->id))?>"/>Add New</a>
+</td>
+</tr>
 </table>
 <hr/>
 <strong>Rate</strong>
