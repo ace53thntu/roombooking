@@ -22,3 +22,24 @@ foreach($this->pageModel->getCalendarPrices() as $calendarPriceDTO) {
 </table>
 <hr/>
 <strong>Rate</strong>
+<table border="0" cellspacing="0" cellpadding="0" width="800">
+<tr>
+<td>RateName</td>
+<td>Number of persons</td>
+<td>Price</td>
+</tr>
+<?php 
+foreach($this->pageModel->getRoomRates() as $rateDTO) {
+?>
+<tr>
+<td><?php echo $rateDTO->rateName?></td>
+<td><?php echo $rateDTO->personNumber?></td>
+<td><?php echo $rateDTO->price?></td>
+</tr>
+<?php }?>
+<tr>
+<td colspan="3">
+<a href="<?php echo $this->url(array("controller"=>"room", "action"=>"addroomrate", "rid"=>$this->pageModel->room->id))?>"/>Add New</a>
+</td>
+</tr>
+</table>

@@ -28,5 +28,25 @@ class RoomViewPageModel extends PageModel {
 		}
 		return $ret;
 	}
+	
+	/**
+	 * Return room rates.
+	 * 
+	 * @return return room rates
+	 */
+	public function getRoomRates() {
+		$ret = array();
+		foreach(Room::getRoomRates($this->room) as $rate) {
+			$rateDTO = new RateDTO();
+			$rateDTO->id = $rate->id;
+			$rateDTO->rateName = Rate::getRateName($rate)->name;
+			$rateDTO->personNumber = $rate->person_number;
+			$rateDTO->price = $rate->price;
+			$rateDTO->created = $rate->created;
+			$rateDTO->modified = $rate->modified;
+			$ret[$rate->id] = $rateDTO;
+		}
+		return $ret;
+	}
 }
 ?>
