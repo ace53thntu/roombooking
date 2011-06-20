@@ -18,6 +18,13 @@ class SendRequestForm extends Zend_Form {
 		$element->setValue($this->room->id);
 		$this->addElement($element);
 		
+		$element = new Zend_Form_Element_Select(Hotel::CITY_PART);
+		$element->setLabel("City part");
+		$element->setDescription("Select city part");
+		$element->addMultiOption(0, "-- Select city part --");
+		$this->addElement($element);
+		
+		
 		$element = new Zend_Form_Element_Submit("Send");
 		$this->addElement($element);
 	}

@@ -201,6 +201,56 @@ class RoomController extends Zend_Controller_Action {
 		}
 	}
 	
+	
+	/**
+	 * Edit room rate function
+	 */
+	public function editroomrateAction() {
+		if ($this->_helper->user->isLoggedIn()) {
+			$user = $this->_helper->user->getUserData();
+			$roomId = $this->_getParam("rid");
+			$rateId = $this->_getParam("rateId");
+            $room = $this->room->findById($roomId);
+            $rate = $this->rate->findById($rateId);
+            if (isset($room)) {
+            	$form = new EditRoomRateForm($room, $rate);
+            	$this->view->form = $form;
+            	if ($this->getRequest ()->isPost ()) {
+                    if ($form->isValid ( $_POST )) {
+                    	$ratId = $form->getValue(Rate::ID);
+                    	$roomId = $form->getValue(Rate::ROOM);
+                    	$data = array(
+                    		Rate::ID => $rateId,
+                    		Rate::ROOM => $roomId,
+                    		Rate::PERSON_NUMBER => $form->getValue(Rate::PERSON_NUMBER),
+                    		Rate::PRICE => $form->getValue(Rate::PRICE),
+                    		Rate::MODIFIED => $this->_helper->generator->generateCurrentTime()
+                    	);
+                    	$this->rate->updateRate($data);
+                    	$this->_redirect("/room/roomprice/rid/".$roomId);
+                    }
+            	}
+            } else {
+            	throw new Zend_Exception("Room not found! ID:" + $roomId);
+            }
+		} else {
+			$this->_redirect( "/user/login?next=".urlencode($this->_helper->generator->getCurrentURI()) );
+		}
+	}
+	
+	/**
+	 * Delete rate by id.
+	 */
+	public function deleteroomrateAction() {
+		if ($this->_helper->user->isLoggedIn()) {
+			$rateId = $this->_getParam("rateId");
+			$this->rate->deleteById($rateId);
+			$this->_redirect("/room/roomprice/rid/".$roomId);
+		} else {
+			$this->_redirect( "/user/login?next=".urlencode($this->_helper->generator->getCurrentURI()) );
+		}
+	}
+	
 	/**
 	 * Send booking request.
 	 */
