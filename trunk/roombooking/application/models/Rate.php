@@ -26,6 +26,16 @@ class Rate extends Zend_Db_Table_Abstract {
     );
     
     /**
+     * Find rate by id.
+     * 
+     * @param $id
+     * @return return rate
+     */
+    public function findById($id) {
+    	return $this->find($id)->current();
+    }
+    
+    /**
      * Add new rate.
      * 
      * @param $data
@@ -38,6 +48,34 @@ class Rate extends Zend_Db_Table_Abstract {
     	} else {
     		$id = $this->insert($data);
     		return $id;
+    	}
+    }
+    
+    /**
+     * Update rate by id.
+     * 
+     * @param $data
+     * @return return rate
+     */
+    public function updateRate($data) {
+    	$rate = $this->findById($data[self::ID]);
+    	if (isset($data)) {
+    		$rate->person_number = $data[self::PERSON_NUMBER];
+    		$rate->price = $data[self::PRICE];
+    		$rate->modified = $data[self::MODIFIED];
+    		$rate->save();
+    	}
+    }
+    
+    /**
+     * Delete rate by id.
+     * 
+     * @param $rateId
+     */
+    public function deleteById($rateId) {
+    	$rate = $this->findById($rateId);
+    	if (isset($rate)) {
+    		$rate->delete();
     	}
     }
     
