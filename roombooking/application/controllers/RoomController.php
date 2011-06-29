@@ -126,6 +126,13 @@ class RoomController extends Zend_Controller_Action {
 	}
 	
 	/**
+	 * View room price action
+	 */
+	public function viewroompriceAction() {
+		
+	}
+	
+	/**
 	 * Add calendar price.
 	 */
 	public function addcalendarpriceAction() {
@@ -254,8 +261,10 @@ class RoomController extends Zend_Controller_Action {
 	/**
 	 * Send booking request.
 	 */
-	public function sendrequestAction() {
-	   if ($this->_helper->user->isLoggedIn()) {
+	public function searchAction() {
+		$config = Zend_Registry::get("config");
+		$this->view->headScript ()->appendFile ( $config->baseurl . '/js/search.js' ); 
+	    if ($this->_helper->user->isLoggedIn()) {
             $user = $this->_helper->user->getUserData();
             $hotel = User::getHotel($user);
             if (!empty($hotel)) {
@@ -265,19 +274,48 @@ class RoomController extends Zend_Controller_Action {
                 $pageModel->loggedInUser = $user;
                 $roomId = $this->_getParam("rid");
                 $room = $this->room->findById($roomId);
-                $form = new SendRequestForm($hotel, $room);
+                $form = new SearchForm($hotel, $room);
                 $this->view->form = $form;
                 $this->view->pageModel = $pageModel;
                 
                 if ($this->getRequest ()->isPost ()) {
                     if ($form->isValid ( $_POST )) {
+                        $cityPart = $form->getValue(Hotel::CITY_PART);
+                        $hotelId = $form->getValue("hotel_id");
+                        $roomId = $form->getValue("room_id");
                         
+                        $rooms = Room::getRoomsBySearchCriteria($cityPart, $hotelId, $roomId);
+                        $roomsDTO = array();
+                        foreach ($rooms as $room) {
+                        	$roomDTO = new RoomDTO();
+                        	$roomDTO->id = $room->rid;
+                        	$roomDTO->name = $room->name;
+                        	$roomDTO->key = $room->key;
+                        	$roomDTO->description = $room->description;
+                        	$roomsDTO[$room->rid] = $roomDTO;
+                        }
+                        $this->view->rooms = $roomsDTO;
                     }
                 }
             } else {
                 throw new Zend_Exception("No hotel specified!");
                 
             }
+        } else {
+            $this->_redirect( "/user/login?next=".urlencode($this->_helper->generator->getCurrentURI()) );
+        }
+	}
+	
+	/**
+	 * Send booing request action.
+	 */
+	public function sendrequestAction() {
+		if ($this->_helper->user->isLoggedIn()) {
+            $user = $this->_helper->user->getUserData();
+            
+            $roomIds = $this->_getParam("chk");
+            
+            exit;
         } else {
             $this->_redirect( "/user/login?next=".urlencode($this->_helper->generator->getCurrentURI()) );
         }

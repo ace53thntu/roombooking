@@ -49,5 +49,7 @@ class HotelController extends Zend_Controller_Action {
 			$this->_redirect( "/user/login?next=".urlencode($this->_helper->generator->getCurrentURI()) );
 		}
 	}
+	
+	
 }
 ?>

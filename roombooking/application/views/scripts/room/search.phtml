@@ -1,0 +1,36 @@
+<?php 
+echo $this->form;
+?>
+<hr/>
+<form name="SendRequestForm" id="SendRequestForm" method="POST" action="<?php echo $this->url(array("controller"=>"room", "action"=>"sendrequest"))?>">
+<table border="0" cellspacing="0" cellpadding="0" width="800">
+<tr>
+<td>&nbsp;</td>
+<td>Key</td>
+<td>Name</td>
+<td>Description</td>
+<td>Price</td>
+</tr>
+<?php 
+foreach ($this->rooms as $room) {
+?>
+<tr>
+<td>
+<input type="checkbox" name="chk[]" value="<?php echo $room->id?>" />
+<input type="hidden" name="roomId<?php echo $room->id?>" id="roomId<?php echo $room->id?>" value="<?php echo $room->id?>"/>
+</td>
+<td><?php echo $room->key?></td>
+<td><?php echo $room->name?></td>
+<td><?php echo $room->description?></td>
+<td><a href="<?php echo $this->url(array("controller"=>"room", "action"=>"viewroomprice"))?>" target="_blank">View Price</a></td>
+</tr>
+<?php
+} 
+?>
+<tr>
+<td colspan="4">
+<input type="submit" name="btnSend" value="Send">
+</td>
+</tr>
+</table>
+</form>
