@@ -87,6 +87,50 @@ class Room extends Zend_Db_Table_Abstract {
     }
     
     /**
+     * Find all rooms by city part, order by key.
+     * 
+     * @param $cityPart
+     * @return return rooms
+     */
+    public static function getRoomsByCityPart($cityPart) {
+    	$table = new Room();
+    	$select = $table->select(Zend_Db_Table::SELECT_WITH_FROM_PART)
+        ->setIntegrityCheck(false)
+        ->from(array("r"=>"room"), array("rid"=>"r.id", "key"=>"r.key", "name"=>"r.name", "description"=>"r.description"))
+        ->join(array("h"=>"hotel"), "r.hotel_id=h.id")
+        ->where("h.city_part=?", $cityPart)
+        ->group("r.id")
+        ->order("r.key");
+        return $table->fetchAll($select);
+    }
+    
+    /**
+     * Find room by criteria.
+     *  
+     * @param $cityPart
+     * @param $hotelId
+     * @param $roomId
+     * @return return rooms
+     */
+    public static function getRoomsBySearchCriteria($cityPart, $hotelId, $roomId) {
+    	$ret = array();
+    	$table = new Room();
+    	if (!empty($roomId) && $roomId != 0) {
+    		$ret[0] = $table->findById($roomId);
+    	} else if (!empty($hotelId) && $hotelId != 0) {
+    		$table = new Hotel();
+    		$hotel = $table->findById($hotelId);
+    		$ret = Hotel::getRooms($hotel);
+    	} else {
+    		$rooms = Room::getRoomsByCityPart($cityPart);
+    		foreach ($rooms as $room) {
+    			$ret[$room->rid] = $room;
+    		}
+    	}
+    	return $ret;
+    }
+    
+    /**
      * Get room's discount.
      * @param $room
      */

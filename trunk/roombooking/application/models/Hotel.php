@@ -86,7 +86,33 @@ class Hotel extends Zend_Db_Table_Abstract {
      * @return rooms in given hotel
      */
     public static function getRooms($hotel) {
-    	return $hotel->findDependentRowset("Room", "Hotel");
+    	$table = new Room();
+    	return $hotel->findDependentRowset("Room", "Hotel", $table->select()->order("name ASC"));
+    }
+    
+    /**
+     * Get hotels as displayable array, sorted by name.
+     */
+    public static function getHotelAsArray() {
+    	$table = new Hotel();
+    	$where = $table->select()->order("name ASC");
+    	$rows = $table->fetchAll($where);
+    	$ret = array();
+    	foreach ($rows as $row) {
+    		$ret[$row->id] = $row->name;
+    	}
+    	return $ret;
+    }
+    
+    /**
+     * Find hotel by city party, sort by name.
+     * 
+     * @param $cityPart
+     * @return return hotel list
+     */
+    public function findByCityPart($cityPart) {
+    	$where = $this->select()->where("city_part=?", $cityPart)->order("name ASC");
+    	return $this->fetchAll($where);
     }
 }
 ?>
