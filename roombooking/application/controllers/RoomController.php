@@ -314,7 +314,12 @@ class RoomController extends Zend_Controller_Action {
             $user = $this->_helper->user->getUserData();
             
             $roomIds = $this->_getParam("chk");
-            
+            if (isset($roomIds)) {
+            	$form = new SendRequestForm($roomIds);
+            	$this->view->form = $form;
+            } else {
+            	throw new Zend_Exception("No room has been chosen!");
+            }
             exit;
         } else {
             $this->_redirect( "/user/login?next=".urlencode($this->_helper->generator->getCurrentURI()) );
