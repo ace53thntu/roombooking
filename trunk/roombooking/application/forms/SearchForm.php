@@ -14,9 +14,11 @@ class SearchForm extends Zend_Form {
 		$this->setMethod("POST");
 		$this->setName("SearchForm");
 		
-		$element = new Zend_Form_Element_Hidden("room_id");
-		$element->setValue($this->room->id);
-		$this->addElement($element);
+		if (isset($this->room)) {
+			$element = new Zend_Form_Element_Hidden("room_id");
+			$element->setValue($this->room->id);
+			$this->addElement($element);
+		}
 		
 		$config = Zend_Registry::get("config");
 		$element = new Zend_Form_Element_Hidden("baseUrl");

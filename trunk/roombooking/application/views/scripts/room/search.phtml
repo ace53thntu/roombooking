@@ -1,6 +1,7 @@
 <?php 
 echo $this->form;
 ?>
+<?php if (isset($this->rooms)) { ?>
 <hr/>
 <form name="SendRequestForm" id="SendRequestForm" method="POST" action="<?php echo $this->url(array("controller"=>"room", "action"=>"sendrequest"))?>">
 <table border="0" cellspacing="0" cellpadding="0" width="800">
@@ -11,7 +12,7 @@ echo $this->form;
 <td>Description</td>
 <td>Price</td>
 </tr>
-<?php 
+<?php
 foreach ($this->rooms as $room) {
 ?>
 <tr>
@@ -34,3 +35,4 @@ foreach ($this->rooms as $room) {
 </tr>
 </table>
 </form>
+<?php }?>
