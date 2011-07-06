@@ -378,3 +378,12 @@ ALTER TABLE `booking`.`room` CHANGE COLUMN `type_id` `key` VARCHAR(3)  NOT NULL 
  DROP FOREIGN KEY `room_type_fk_constraint`;
  
 DROP TABLE room_type;
+
+-- 2011-07-04
+ALTER TABLE `booking`.`booking` DROP FOREIGN KEY `booking_fk_constraint9` ;
+ALTER TABLE `booking`.`booking` CHANGE COLUMN `calendar_id` `calendar_price_id` INT(11) NULL DEFAULT NULL  , 
+  ADD CONSTRAINT `booking_fk_constraint9`
+  FOREIGN KEY (`calendar_price_id` )
+  REFERENCES `booking`.`calendar_price` (`id` )
+, DROP INDEX `booking_fk_constraint9` 
+, ADD INDEX `booking_fk_constraint9` (`calendar_price_id` ASC) ;

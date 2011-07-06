@@ -92,14 +92,21 @@ class Room extends Zend_Db_Table_Abstract {
      * @param $cityPart
      * @return return rooms
      */
-    public static function getRoomsByCityPart($cityPart) {
+    public static function getRoomsByCityPart($cityPart, $excludeHotelIds) {
+    	$excludeHotelStr = "";
+    	foreach ($excludeHotelIds as $excludeHotelId) {
+    		$excludeHotelStr .= ($excludeHotelId.",");
+    	}
     	$table = new Room();
     	$select = $table->select(Zend_Db_Table::SELECT_WITH_FROM_PART)
         ->setIntegrityCheck(false)
         ->from(array("r"=>"room"), array("rid"=>"r.id", "key"=>"r.key", "name"=>"r.name", "description"=>"r.description"))
         ->join(array("h"=>"hotel"), "r.hotel_id=h.id")
-        ->where("h.city_part=?", $cityPart)
-        ->group("r.id")
+        ->where("h.city_part=?", $cityPart);
+        if (!empty($excludeHotelStr)) {
+        	$select = $select->where("h.id NOT IN (?)", $excludeHotelStr);
+        }
+        $select = $select->group("r.id")
         ->order("r.key");
         return $table->fetchAll($select);
     }
@@ -110,9 +117,10 @@ class Room extends Zend_Db_Table_Abstract {
      * @param $cityPart
      * @param $hotelId
      * @param $roomId
+     * @param $excludeHotel exclude hotel object
      * @return return rooms
      */
-    public static function getRoomsBySearchCriteria($cityPart, $hotelId, $roomId) {
+    public static function getRoomsBySearchCriteria($cityPart, $hotelId, $roomId, $excludeHotel=null) {
     	$ret = array();
     	$table = new Room();
     	if (!empty($roomId) && $roomId != 0) {
@@ -122,7 +130,13 @@ class Room extends Zend_Db_Table_Abstract {
     		$hotel = $table->findById($hotelId);
     		$ret = Hotel::getRooms($hotel);
     	} else {
-    		$rooms = Room::getRoomsByCityPart($cityPart);
+    		$excludeHotelsStr = "";
+    		if (isset($excludeHotel)) {
+    			$excludeHotelsStr = array(
+    				$excludeHotel->id => $excludeHotel->id
+    			);
+    		}
+    		$rooms = Room::getRoomsByCityPart($cityPart, $excludeHotelsStr);
     		foreach ($rooms as $room) {
     			$ret[$room->rid] = $room;
     		}

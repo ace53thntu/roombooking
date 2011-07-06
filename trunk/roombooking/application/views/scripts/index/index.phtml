@@ -55,7 +55,7 @@
 <!-- panes -->
 <div id="flowpanes">
 
-
+<?php if (isset($this->pageModel->hotel)) {?>
     <!-- wrapper for scrollable items -->
 <div class="items">
 
@@ -133,7 +133,7 @@
 
 
 </div>
-
+<?php }?>
 
 </div>
 
@@ -194,7 +194,7 @@ $(document).ready(function() {
             </li>
             <li class="sep">|</li>
             <li>
-            <?php echo $this->pageModel->hotel->name?>
+            <?php echo isset($this->pageModel->hotel) ? $this->pageModel->hotel->name : "No hotel"?>
             </li>
             <li class="sep">|</li>
             <li class="right">&nbsp;</li>
@@ -205,6 +205,8 @@ $(document).ready(function() {
 </div>
 <!--End Sliding MenuPanel--> 
 
+
+<?php if (isset($this->pageModel->hotel)) {?>
 
 <div id="Container">
 <div id="Header"></div>
@@ -510,3 +512,4 @@ foreach($rooms as $room) {
 
 
 </div>
+<?php }?>

@@ -108,10 +108,21 @@ class Hotel extends Zend_Db_Table_Abstract {
      * Find hotel by city party, sort by name.
      * 
      * @param $cityPart
+     * @param $excludeHotelIds exclude hotel ids, if any
      * @return return hotel list
      */
-    public function findByCityPart($cityPart) {
-    	$where = $this->select()->where("city_part=?", $cityPart)->order("name ASC");
+    public function findByCityPart($cityPart, $excludeHotelIds=null) {
+    	$excludeHotelStr = "";
+    	if (isset($excludeHotelIds)) {
+    		foreach ($excludeHotelIds as $excludeHotelId) {
+    			$excludeHotelStr .= ($excludeHotelId.",");	
+    		}
+    	}
+    	$where = $this->select()->where("city_part=?", $cityPart);
+    	if (!empty($excludeHotelStr)) {
+    		$where = $where->where("id NOT IN (?)", $excludeHotelStr);
+    	}
+    	$where = $where->order("name ASC");
     	return $this->fetchAll($where);
     }
 }
