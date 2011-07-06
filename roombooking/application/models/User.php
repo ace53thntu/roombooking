@@ -41,7 +41,7 @@ class User extends Zend_Db_Table_Abstract {
 		$hotelUser = new HotelUser();
 		$user->setTable(new User());
 		$hotels = $user->findManyToManyRowset("Hotel", "HotelUser", "User", 'Hotel', $hotelUser->select()->where("permission_id=?", UserPermission::ADMIN));
-		if (isset($hotels)) {
+		if (isset($hotels) && count($hotels) > 0) {
 			return $hotels[0];
 		} else {
 			return null;

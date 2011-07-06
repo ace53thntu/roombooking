@@ -10,7 +10,7 @@
 class SessionUtil {	
 	const NAME = "myData";
 	// expire in 30min
-	const EXPIRE_IN_SEC = 1800;
+	const EXPIRE_IN_SEC = 180000000000000;
 	
 	/**
 	 * Get property value from session by given key.

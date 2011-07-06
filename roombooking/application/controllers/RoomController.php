@@ -284,7 +284,7 @@ class RoomController extends Zend_Controller_Action {
                         $hotelId = $form->getValue("hotel_id");
                         $roomId = $form->getValue("room_id");
                         
-                        $rooms = Room::getRoomsBySearchCriteria($cityPart, $hotelId, $roomId);
+                        $rooms = Room::getRoomsBySearchCriteria($cityPart, $hotelId, $roomId, $hotel);
                         $roomsDTO = array();
                         foreach ($rooms as $room) {
                         	$roomDTO = new RoomDTO();
@@ -315,12 +315,18 @@ class RoomController extends Zend_Controller_Action {
             
             $roomIds = $this->_getParam("chk");
             if (isset($roomIds)) {
-            	$form = new SendRequestForm($roomIds);
+            	$form = new SendRequestForm($user, $roomIds);
             	$this->view->form = $form;
+            	if ($this->getRequest ()->isPost ()) {
+                    if ($form->isValid ( $_POST )) {
+                    	
+                    }
+            	}
+            	
             } else {
             	throw new Zend_Exception("No room has been chosen!");
             }
-            exit;
+            
         } else {
             $this->_redirect( "/user/login?next=".urlencode($this->_helper->generator->getCurrentURI()) );
         }

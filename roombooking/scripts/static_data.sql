@@ -1,6 +1,7 @@
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
 LOCK TABLES `user` WRITE;
 INSERT INTO `booking`.`user` VALUES  (1,'lhj1982','670b14728ad9902aecba32e22fa4f6bd','James','Lee','','');
+INSERT INTO `booking`.`user` VALUES  (2,'adelablue','670b14728ad9902aecba32e22fa4f6bd','Ningjing','Chen','','adelablue@gmail.com');
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 
