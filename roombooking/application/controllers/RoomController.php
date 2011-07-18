@@ -6,6 +6,8 @@ class RoomController extends Zend_Controller_Action {
 	private $discount;
 	private $calendarPrice;
 	private $rate;
+	private $customer;
+	private $booking;
 	
 	public function init() {
 		$this->hotel = new Hotel();
@@ -13,6 +15,8 @@ class RoomController extends Zend_Controller_Action {
 		$this->discount = new Discount();
 		$this->calendarPrice = new CalendarPrice();
 		$this->rate = new Rate();
+		$this->customer = new Customer();
+		$this->booking = new Booking();
 	}
 	
 	/**
@@ -316,10 +320,62 @@ class RoomController extends Zend_Controller_Action {
             $roomIds = $this->_getParam("chk");
             if (isset($roomIds)) {
             	$form = new SendRequestForm($user, $roomIds);
+            	$this->view->form = $form;            	
+            } else {
+            	throw new Zend_Exception("No room has been chosen!");
+            }
+        } else {
+            $this->_redirect( "/user/login?next=".urlencode($this->_helper->generator->getCurrentURI()) );
+        }
+	}
+	
+	
+	/**
+	 * Submit booking request.
+	 */
+	public function submitbookingrequestAction() {
+		if ($this->_helper->user->isLoggedIn()) {
+            $user = $this->_helper->user->getUserData();
+            
+            print_r($_POST);
+            exit;
+            $roomIds = $this->_getParam("chk");
+            if (isset($roomIds)) {
+            	$form = new SendRequestForm($user, $roomIds);
             	$this->view->form = $form;
             	if ($this->getRequest ()->isPost ()) {
                     if ($form->isValid ( $_POST )) {
-                    	
+                    	$db = Zend_Registry::get("db");
+                    	$db->beginTransaction();
+                    	$data = array(
+                    		Customer::SOCIAL_SECURITY_NUMBER => $form->getValue(Customer::SOCIAL_SECURITY_NUMBER),
+                    		Customer::FIRST_NAME => $form->getValue(Customer::FIRST_NAME),
+                    		Customer::LAST_NAME => $form->getValue(Customer::LAST_NAME),
+                    		Customer::PHONE => $form->getValue(Customer::PHONE)
+                    	);
+						$customerId = $this->customer->addCustomer($data);
+						
+                    	$roomIdsArr = $this->_getParam("roomIds");
+                    	foreach ($roomIdsArr as $roomId) {
+                    		$room = $this->room->findById($roomId);
+                    		$fromHotel = Room::getHotel($room);
+                    		$data = array(
+                    			Booking::ROOM_ID => $roomId,
+                    			Booking::CUSTOMER => $customerId,
+                    			Booking::FROM_USER => $this->_getParam(Booking::FROM_USER),
+                    			Booking::FROM_HOTEL => $this->_getParam(Booking::FROM_HOTEL),
+                    			Booking::TO_HOTEL => $fromHotel->id,
+                    			Booking::FROM_DATE => $this->_getParam(Booking::FROM_DATE),
+                    			Booking::TO_DATE => $this->_getParam(Booking::TO_DATE),
+                    			Booking::NUMER_OF_PERSON => $this->_getParam(Booking::NUMER_OF_PERSON),
+                    			Booking::STATUS => BookingStatus::PENDING,
+                    			Booking::ARRIVAL_TIME => $this->_getParam(Booking::ARRIVAL_TIME),
+                    			Booking::RATE => isset(Room::getRoomRate($room)) ? Room::getRoomRate($room)->id : null,
+                    			Booking::CREATED => $this->_helper->generator->generateCurrentTime(), 
+                    		);
+                    	}
+						//$this->booking
+                    	$db->commit();
                     }
             	}
             	
@@ -330,6 +386,14 @@ class RoomController extends Zend_Controller_Action {
         } else {
             $this->_redirect( "/user/login?next=".urlencode($this->_helper->generator->getCurrentURI()) );
         }
+	}
+	
+	public function testAction() {
+		$rid = $this->_getParam("rid");
+		$room = $this->room->findById($rid);
+		$rate = Room::getRoomRate($room);
+		echo $rate->id;
+		print_r($rate);exit;
 	}
 }
 ?>

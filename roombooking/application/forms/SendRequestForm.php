@@ -13,13 +13,21 @@ class SendRequestForm extends Zend_Form {
 	
 	public function init() {
 		$this->setMethod("POST");
+		$this->setAction("submitbookingrequest");
 		$this->setName("SendRequestForm");
 		
 		foreach ($this->selectedRoomIds as $selectedRoomId) {
-			$element = new Zend_Form_Element_Hidden("roomIds[]");
-			$element->setValue($selectedRoomId);
-			$this->addElement($element);
+			if (isset($selectedRoomId)) {
+				$defArr["roomId".$selectedRoomId] = "hidden";
+				$valArr["roomId".$selectedRoomId] = $selectedRoomId;
+			}
 		}
+		$element = new Zend_Form_SubForm("foo");
+		$element->setElementsBelongTo("roomIds")
+		->setElements($defArr);
+		$element->populate($valArr);
+		$this->addSubForm($element, "foo");
+
 		
 		$element = new Zend_Form_Element_Hidden(Booking::FROM_USER);
 		$element->setValue($this->fromUser->id);
