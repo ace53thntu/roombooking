@@ -208,7 +208,7 @@ CREATE TABLE `rate` (
   UNIQUE KEY `rate_unique` (`room_id`,`person_number`,`rate_name`),
   KEY `rate_fk_constratint1` (`rate_name`),
   CONSTRAINT `rate_fk_constratint1` FOREIGN KEY (`rate_name`) REFERENCES `rate_name` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='rate table define all price rate of hotel rooms, every room ';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='rate table define all price rate of hotel rooms, every room can only have one rate ';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

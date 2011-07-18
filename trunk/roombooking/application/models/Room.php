@@ -186,5 +186,20 @@ class Room extends Zend_Db_Table_Abstract {
     public static function getRoomRates($room) {
         return $room->findDependentRowset("Rate", "Room");
     }
+    
+    /**
+     * Return room rate, it's one-to-one now.
+     * 
+     * @param $room
+     * @return return room rate
+     */
+    public static function getRoomRate($room) {
+    	if (isset($room)) {
+	    	$rates = $room->findDependentRowset("Rate", "Room");
+	    	return count($rates) > 0 ? $rates->current() : null;
+    	} else {
+    		return null;
+    	}
+    }
 }
 ?>
