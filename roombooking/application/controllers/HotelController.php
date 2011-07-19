@@ -2,9 +2,11 @@
 class HotelController extends Zend_Controller_Action {
 	
 	private $hotel;
+	private $hotelUser;
 	
 	public function init() {
 		$this->hotel = new Hotel();
+		$this->hotelUser = new HotelUser();
 	}
 	
 	/**
@@ -12,6 +14,7 @@ class HotelController extends Zend_Controller_Action {
 	 */
 	public function addAction() {
 		if ($this->_helper->user->isLoggedIn()) {
+			$user = $this->_helper->user->getUserData();
             $form = new AddHotelForm(209, null);
             $this->view->form = $form;
             
@@ -41,8 +44,15 @@ class HotelController extends Zend_Controller_Action {
 	            	
 	            	$db = Zend_Registry::get("db");
 	            	$db->beginTransaction();
-	            	$this->hotel->addHotel($data);
+	            	$hotel = $this->hotel->addHotel($data);
+	            	$data = array(
+	            	  HotelUser::HOTEL => $hotel->id,
+	            	  HotelUser::USER => $user->id,
+	            	  HotelUser::PERMISSION => Permission::ADMIN
+	            	);
+	            	$this->hotelUser->addHotelUser($data);
 	            	$db->commit();
+	            	$this->_redirect("/");
                 }
             }
 		} else {

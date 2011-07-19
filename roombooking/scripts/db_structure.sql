@@ -387,3 +387,53 @@ ALTER TABLE `booking`.`booking` CHANGE COLUMN `calendar_id` `calendar_price_id` 
   REFERENCES `booking`.`calendar_price` (`id` )
 , DROP INDEX `booking_fk_constraint9` 
 , ADD INDEX `booking_fk_constraint9` (`calendar_price_id` ASC) ;
+
+
+
+-- 2011-07-19
+-- activity type
+CREATE TABLE  `booking`.`activity_type` (
+  `id` int(11) NOT NULL auto_increment,
+  `key` varchar(20) NOT NULL,
+  `name` varchar(40) NOT NULL,
+  `table_name` varchar(20) default NULL,
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY `activity_type_unique` USING BTREE (`key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='activity type';
+
+insert into activity_type (`key`, `name`, table_name) values ('SEND_BOOKING_REQUEST', 'Send booking request', 'booking');
+insert into activity_type (`key`, `name`, table_name) values ('RESPONSE_BOOKING_REQUEST', 'Response booking request', 'booking');
+
+CREATE TABLE `booking`.`activity` (
+  `id` INTEGER  NOT NULL AUTO_INCREMENT,
+  `type` INTEGER  NOT NULL,
+  `user_id` INTEGER  NOT NULL,
+  `object` INTEGER  NOT NULL,
+  `created` DATETIME  NOT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `activity_type_fk_constraint` FOREIGN KEY `activity_type_fk_constraint` (`type`)
+    REFERENCES `activity_type` (`id`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT,
+  CONSTRAINT `activity_user_fk_constraint` FOREIGN KEY `activity_user_fk_constraint` (`user_id`)
+    REFERENCES `user` (`id`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT
+)
+ENGINE = InnoDB
+CHARACTER SET utf8 COLLATE utf8_general_ci
+COMMENT = 'user actities';
+
+CREATE TABLE  `booking`.`mail_queue` (
+  `id` int(11) NOT NULL auto_increment,
+  `activity_type` int(11) NOT NULL,
+  `subject` varchar(100) NOT NULL,
+  `sender` varchar(50) NOT NULL,
+  `recipients` text NOT NULL COMMENT 'recipients, separated by comma',
+  `message` text NOT NULL,
+  `created` datetime NOT NULL,
+  `sent` tinyint(1) NOT NULL default '0',
+  PRIMARY KEY  (`id`),
+  KEY `activity_type_key_fk_constraint` (`activity_type`),
+  CONSTRAINT `activity_type_key_fk_constraint` FOREIGN KEY (`activity_type`) REFERENCES `activity_type` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
