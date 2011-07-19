@@ -254,6 +254,7 @@ class RoomController extends Zend_Controller_Action {
 	 */
 	public function deleteroomrateAction() {
 		if ($this->_helper->user->isLoggedIn()) {
+			$roomId = $this->_getParam("rId");
 			$rateId = $this->_getParam("rateId");
 			$this->rate->deleteById($rateId);
 			$this->_redirect("/room/roomprice/rid/".$roomId);
@@ -359,6 +360,7 @@ class RoomController extends Zend_Controller_Action {
                     	foreach ($roomIdsArr as $roomId) {
                     		$room = $this->room->findById($roomId);
                     		$fromHotel = Room::getHotel($room);
+                    		$rate = Room::getRoomRate($room);
                     		$data = array(
                     			Booking::ROOM_ID => $roomId,
                     			Booking::CUSTOMER => $customerId,
@@ -370,11 +372,14 @@ class RoomController extends Zend_Controller_Action {
                     			Booking::NUMER_OF_PERSON => $this->_getParam(Booking::NUMER_OF_PERSON),
                     			Booking::STATUS => BookingStatus::PENDING,
                     			Booking::ARRIVAL_TIME => $this->_getParam(Booking::ARRIVAL_TIME),
-                    			Booking::RATE => isset(Room::getRoomRate($room)) ? Room::getRoomRate($room)->id : null,
+                    			Booking::RATE => isset($rate) ? $rate->id : null,
+                    			Booking::CALENDAR => null,
+                    			Booking::DISCOUNT => null,
+                    			booking::COMMISSION => null,
                     			Booking::CREATED => $this->_helper->generator->generateCurrentTime(), 
                     		);
                     	}
-						//$this->booking
+						$this->booking->addEntry($data);
                     	$db->commit();
                     }
             	}
