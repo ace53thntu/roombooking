@@ -1,0 +1,9 @@
+@charset "utf-8";
+/* CSS Document */
+
+.BgBlu {
+	background-image: url(../gfx/BgBlue80.png);
+	
+}body {
+	background-image: url(../gfx/BgBlue80.png);
+}
