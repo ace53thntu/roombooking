@@ -402,7 +402,7 @@ CREATE TABLE  `booking`.`activity_type` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='activity type';
 
 insert into activity_type (`key`, `name`, table_name) values ('SEND_BOOKING_REQUEST', 'Send booking request', 'booking');
-insert into activity_type (`key`, `name`, table_name) values ('RESPONSE_BOOKING_REQUEST', 'Response booking request', 'booking');
+insert into activity_type (`key`, `name`, table_name) values ('RESPOND_BOOKING_REQUEST', 'Response booking request', 'booking');
 
 CREATE TABLE `booking`.`activity` (
   `id` INTEGER  NOT NULL AUTO_INCREMENT,

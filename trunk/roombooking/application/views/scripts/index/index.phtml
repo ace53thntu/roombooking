@@ -1,515 +1,269 @@
-<!--Start Sliding MenuPanel--> 
-<div id="toppanel">
-
-<div id="Head">
-<div id="Logo"></div>
-
-<div id="ServerTime">
-<ul class="login">
-<li id="clock" class="Time"></li>
-</ul>
-</div>
-
-<div id="ToggleMenu">
-<ul class="login">
-<li><br /></li>
-<li class="sep"></li>
-<li id="toggle">
-<a id="open" class="open" href="#">Open Menu</a>
-<a id="close" style="display: none;" class="close" href="#">Close Menu</a
-></li>
-</ul>
-</div>
-</div>
-
-
-<!--Start MenuPanel Content--> 
-<div id="panel">
-
-<!--Start Panel Content - Clearfix with logo and content divs--> 
-<div class="content clearfix">
-
-
-
-
-
-
-<div id="Testpanel">
-<div id="LoggedIn">
-<div id="LoggedInTitle">
-<input type="text" name="name" id="name" value="Search..."/>
-</div>
-<ul id="flowtabs">
-    <li><a id="1" href="#1">Administration</a></li>
-    <li><a id="2" href="#2">Frontdesk</a></li>
-    <li><a id="3" href="#3">Reports</a></li>
-    <li><a id="4" href="#4">Statistics</a></li>
-</ul>
-</div>
-
-
-
-<!-- tabs work as navigator for scrollable -->
-
-
-<!-- panes -->
-<div id="flowpanes">
-
-<?php if (isset($this->pageModel->hotel)) {?>
-    <!-- wrapper for scrollable items -->
-<div class="items">
-
-<div>
-<div id="MenuDivTitle">
-<h2>Administration</h2>
-</div>
-<div id="MenuDiv">
-<ul>
-<li><a class="zoom3" href="<?php echo $this->url(array("controller"=>"hotel", "action"=>"add", null, true))?>">Add Property</a></li>
-<li><a class="zoom3" href="templates/tmp_editroomcat.html?iframe">add Roomcategory</a></li>
-<li></li>
-</ul>
-</div>
-<div id="MenuDiv">
-<ul>
-<li></li>
-</ul>
-</div>
-<div id="MenuDiv">
-<ul>
-<li></li>
-</ul>
-</div>
-</div>
-
-<div>
-<div id="MenuDivTitle">
-<h2>Frontdesk</h2>
-</div>
-<div id="MenuDiv">
-<li></li>
-</div>
-<div id="MenuDiv">
-<li></li>
-</div>
-<div id="MenuDiv">
-<li></li>
-</div>
-</div>
-
-<div>
-<div id="MenuDivTitle">
-<h2>Rapporter</h2>
-</div>
-<div id="MenuDiv">
-<li></li>
-</div>
-<div id="MenuDiv">
-<li></li>
-</div>
-<div id="MenuDiv">
-<li></li>
-</div>
-</div>
-
-
-<div>
-<div id="MenuDivTitle">
-<h2>Statistik</h2>
-</div>
-<div id="MenuDiv">
-<li></li>
-</div>
-<div id="MenuDiv">
-<li></li>
-</div>
-<div id="MenuDiv">
-<li></li>
-</div>
-</div>
-
-
-
-
-
-</div>
-<?php }?>
-
-</div>
-
-<!-- activate tabs with JavaScript -->
-<script>
-
-
-// wait until document is fully scriptable
-$(document).ready(function() {
-
-    // select #flowplanes and make it scrollable. use circular and navigator plugins
-    $("#flowpanes").scrollable({size: 1, clickable: false})
-    .mousewheel(400) 
-
-    .navigator({
-
-        // select #flowtabs to be used as navigator
-        navi: "#flowtabs",
-        // select A tags inside the navigator to work as items (not direct children)
-        naviItem: 'a',
-        
-        // assign "current" class name for the active A tag inside navigator
-        activeClass: 'current'
-        
-
-
-    });
-
-});
-</script>
-
-
-
-
-</div>
-
-
-
-  
-
-
-</div>
-<!--Start Panel Content - Clearfix with logo and content divs--> 
-
-</div>
-<!--End MenuPanel Content--> 
-
-
-
-
-<!--Start Tab - Menu Panel Up/down-->  
-<div class="tab">
-        <ul class="login">
-            <li class="left">&nbsp;</li>
-            <?php $loggedInUser = $this->loggedInUser()?>
-            <li>
-            <?php echo empty($loggedInUser) ? "" : $loggedInUser->first_name." ".$loggedInUser->last_name?>
-            </li>
-            <li class="sep">|</li>
-            <li>
-            <?php echo isset($this->pageModel->hotel) ? $this->pageModel->hotel->name : "No hotel"?>
-            </li>
-            <li class="sep">|</li>
-            <li class="right">&nbsp;</li>
-        </ul> 
-    </div>
-<!--End Tab - Menu Panel Up/down--> 
-    
-</div>
-<!--End Sliding MenuPanel--> 
-
-
-<?php if (isset($this->pageModel->hotel)) {?>
 
 <div id="Container">
-<div id="Header"></div>
-<?php 
-$rooms = $this->pageModel->getHotelRooms();
-?>
-<div id="Availability">
-<div id="PanelHead"><h1>Availability</h1><p> Occ:<span class="HeadInfo">00,0%</span>Rate:<span class="HeadInfo">Std</span>Currency:<span class="HeadInfo">SEK</span></p></div>
-<div id="PanelContent">
-
-
-<?php 
-foreach($rooms as $room) {
-?>
-<ul class="Link"> 
-<li >
-<span class="LeftSpace">
-<form>
-    <input type="hidden" name="room_id" value="<?php echo $room->id?>"></input>
-    <input name="Available" type="text" id="Available" value="<?php echo $room->available?>" />
-</form>
-</span>
-<span class="RightSpace">
-<h3>Roomcategory</h3>
-<p>Discount:<span class="DiscComCol"><?php echo Room::getDiscount($room)?></span>commission:<span class="DiscComCol">15%</span></p>
-</span>
-</li>
-</ul>
-<?php }//end foreach?> 
-</div>
-
-<div id="AvailTotal">
- <ul class="Link"> 
-<li>
-  <span class="LeftSpace">
-  <p>0</p></span>
-  <span class="RightSpace">
-  <h3>Total available</h3></span>
-</li>
+<div id="Head">
+<div id="Logo">v.0.1.0</div>
+<div id="Menu">
+<ul>
+<li class="MenuItem"><a href="">Administration</a></li>
+<li class="MenuItem"><a href="">Frontdesk</a></li>
+<li class="MenuItem"><a href="">Statistics</a></li>
+<li class="MenuItem"><a href="">Reports</a></li>
+<li class="MenuItem"><a href="">Misc</a></li>
+<li class="MenuItem"><a href=""><span class="Logut">Logout</span></a></li>
 </ul>
 </div>
 
-<div id="PanelInfo">Showing <span class="StatusCol">1-5</span> Categories of <span class="StatusCol">99</span> | <span class="ShowMore"><a href="#">Previous</a> <a href="#">Next</a></span></div>
-
-<div id="PanelFoot"><a href="">Edit Availability</a><a href="">Edit All</a></div>
-
+</div>
+<div id="Col1">
+<div class="ColHead">
+<span class="Left"><span class="HeadLine">Availability</span><span class="SubLine">Occupancy 00,0%</span></span>
+<span class="Right"><span class="HeadLine">000</span><span class="SubLine">Available</span></span>
 </div>
 
+<!--
+<form class="FormRooms">
+  <label>
+  <input name="FreeRooms" type="text"   value="0000"  maxlength="4" />
+  Roomcategory<span class="small">Discount: 000  Discount: 000</span>
+</label>
+</form>-->
 
 
 
-
-<div id="Reservations">
-<div id="PanelHead">
-<h1>bookings in</h1>
-<p>Today:<span class="HeadInfo">0</span>Pending:<span class="HeadInfo">0</span></p></div>
-<div id="PanelContent">
-
-<ul class="Link"> 
-<li>
-<a href="#">
-  <span class="LeftSpace">
-  <h3 class="InfoCol">Status</h3>
-  <p>time</p>
-  <p>00:00</p>
-  </span>
-  <span class="RightSpace">
-  <h3>Lastname, Firstname</h3>
-  <p>X Roomtype, X p</p>
-  <p>Source Hotel</p>
-  </span>
-</a>
-</li>
-</ul>
-
-<ul class="Link"> 
-<li>
-<a href="#">
-  <span class="LeftSpace">
-  <h3 class="InfoCol">Status</h3>
-  <p>time</p>
-  <p>00:00</p>
-  </span>
-  <span class="RightSpace">
-  <h3>Lastname, Firstname</h3>
-  <p>X Roomtype, X p</p>
-  <p>Source Hotel</p>
-  </span>
-</a>
-</li>
-</ul>
-
-<ul class="Link"> 
-<li>
-<a href="#">
-  <span class="LeftSpace">
-  <h3 class="InfoCol">Status</h3>
-  <p>time</p>
-  <p>00:00</p>
-  </span>
-  <span class="RightSpace">
-  <h3>Lastname, Firstname</h3>
-  <p>X Roomtype, X p</p>
-  <p>Source Hotel</p>
-  </span>
-</a>
-</li>
+<ul>
+<li class="Avail"><a class="various1" href="templates/test.html"><span class="RoomNo">0000</span><span class="HeadLine">Roomcategory</span><span class="DisCom"><span class="Dis">Discount:0000</span><span class="Com">Commission: 00%</span></span></a></li>
+<li class="Avail"><a class="various1" href="#AvailOneWrap"><span class="RoomNo">0000</span><span class="HeadLine">Roomcategory</span><span class="DisCom"><span class="Dis">Discount:0000</span><span class="Com">Commission: 00%</span></span></a></li>
+<li class="Avail"><a class="various1" href="#AvailOneWrap"><span class="RoomNo">0000</span><span class="HeadLine">Roomcategory</span><span class="DisCom"><span class="Dis">Discount:0000</span><span class="Com">Commission: 00%</span></span></a></li>
+<li class="Avail"><a class="various1" href="#AvailOneWrap"><span class="RoomNo">0000</span><span class="HeadLine">Roomcategory</span><span class="DisCom"><span class="Dis">Discount:0000</span><span class="Com">Commission: 00%</span></span></a></li>
+<li class="Avail"><a class="various1" href="#AvailOneWrap"><span class="RoomNo">0000</span><span class="HeadLine">Roomcategory</span><span class="DisCom"><span class="Dis">Discount:0000</span><span class="Com">Commission: 00%</span></span></a></li>
+<li class="Avail"><a class="various1" href="#AvailOneWrap"><span class="RoomNo">0000</span><span class="HeadLine">Roomcategory</span><span class="DisCom"><span class="Dis">Discount:0000</span><span class="Com">Commission: 00%</span></span></a></li>
+<li class="Avail"><a class="various1" href="#AvailOneWrap"><span class="RoomNo">0000</span><span class="HeadLine">Roomcategory</span><span class="DisCom"><span class="Dis">Discount:0000</span><span class="Com">Commission: 00%</span></span></a></li>
+<li class="Avail"><a class="various1" href="#AvailOneWrap"><span class="RoomNo">0000</span><span class="HeadLine">Roomcategory</span><span class="DisCom"><span class="Dis">Discount:0000</span><span class="Com">Commission: 00%</span></span></a></li>
+<li class="Avail"><a class="various1" href="#AvailOneWrap"><span class="RoomNo">0000</span><span class="HeadLine">Roomcategory</span><span class="DisCom"><span class="Dis">Discount:0000</span><span class="Com">Commission: 00%</span></span></a></li>
 </ul>
 
 
 
-</div>
-<div id="PanelInfo">Showing <span class="StatusCol">1-3</span> Bookings of <span class="StatusCol">99</span> | <span class="ShowMore"><a href="#">Previous</a> <a href="#">Next</a></span></div>
-<div id="PanelFoot"><a href="">Show Pending</a><a href="">Show All</a></div>
-</div>
-
-
-
-
-
-<div id="Requests">
-
-<div id="PanelHead">
-<h1>bookings out</h1><p>Today:<span class="HeadInfo">0</span>Pending:<span class="HeadInfo">0</span></p>
-</div>
-
-
-<div id="PanelContent">
-
-<ul class="Link"> 
-<li>
-<a href="#">
-  <span class="LeftSpace">
-  <h3 class="InfoCol">Status</h3>
-  <p>Time</p>
-  <p>00:00</p>
-  </span>
-  <span class="RightSpace">
-  <h3>Lastname, Firstname</h3>
-  <p>X Roomtype, X p</p>
-  <p>Source Hotel</p>
-  </span>
-</a>
-</li>
-</ul>
-
-<ul class="Link"> 
-<li>
-<a href="#">
-  <span class="LeftSpace">
-  <h3 class="InfoCol">Status</h3>
-  <p>time</p>
-  <p>00:00</p>
-  </span>
-  <span class="RightSpace">
-  <h3>Lastname, Firstname</h3>
-  <p>X Roomtype, X p</p>
-  <p>Source Hotel</p>
-  </span>
-</a>
-</li>
-</ul>
-
-<ul class="Link"> 
-<li>
-<a href="#">
-  <span class="LeftSpace">
-  <h3 class="InfoCol">Status</h3>
-  <p>time</p>
-  <p>00:00</p>
-  </span>
-  <span class="RightSpace">
-  <h3>Lastname, Firstname</h3>
-  <p>X Roomtype, X p</p>
-  <p>Source Hotel</p>
-  </span>
-</a>
-</li>
-</ul>
-
-</div>
-
-
-<div id="PanelInfo">Showing <span class="StatusCol">1-3</span> Bookings of <span class="StatusCol">99</span> | <span class="ShowMore"><a href="#">Previous</a> <a href="#">Next</a></span></div>
-
-<div id="PanelFoot"><a href="">New Booking</a><a href="">Show Today</a></div>
-
-</div>
-
-
-
-
-
-<div id="Summary">
-<div id="PanelHead"><h1>Summary</h1>
-<p>City:<span class="HeadInfo">Stockholm</span>Area:<span class="HeadInfo">north</span></p></div>
-<div id="PanelContent">
-
-<ul class="Summary"> 
-<li>
-  <span class="LeftSpace">
-  <p>0</p>
-  <p>0</p>
-  <p>0.0%</p>
-  <p>&nbsp;</p>
-  <p>0</p>
-  <p>0</p>
-  <p>0</p>
-  <p>0</p>
-  <p>0</p>
-  <p>0</p>
-  </span>
-  <span class="RightSpace">
-  <p>Total amount of rooms</p>
-  <p>Total amount of Hotels</p>
-  <p>Occupancy</p>
-  <p>&nbsp;</p>
-  <p>Available rooms</p>
-  <p>available hotels</p>
-  </span></li>
-<li><span class="RightSpace">
-  <p>Occupied rooms</p>
-  <p>Full hotels</p>
-  <p>Overbooked rooms</p>
-  <p>Overbooked hotels</p>
-  </span>
-</li>
+<div class="ColControl">
+<p>Showing Roomcategories 1 - 9 of 9</p>
+<ul>
+<li><a href=""><span class="PrevIcon"></span>Prev</a></li>
+<li><a href="">All</a></li>
+<li><a href=""><span class="NextIcon"></span>Next</a></li>
 </ul>
 </div>
-<div id="PanelFoot"><a href="">Summary view</a><a href="">Area view</a></div>
+
+<div class="ColFoot">
+<ul>
+<li><a href=""><span class="FootButton">Edit All</span></a></li>
+</ul>
+</div>
+
+</div>
+
+
+<div id="Col2">
+<div class="ColHead">
+<span class="Left"><span class="HeadLine">Events</span><span class="SubLine">Events today: 0000</span></span>
+<span class="Right"><span class="HeadLine">00:00:00</span><span class="SubLine">Wednesday, September 30</span></span>
+</div>
+
+
+
+<ul class="Event">
+<li class="Green"><a href="">
+  <span class="Right">
+  <span class="EventTime">00:00</span>
+  <span class="EventHeadline">Andersson-hjelm, sven-gördis</span>
+  <span class="EventInfo">1 roomcategory, 1 p</span>
+  <span class="EventFrom">from: Test hotel<span class="EventIcon"></span></span></span>
+  <span class="Left">
+  <span class="EventIcon"></span>
+  <span class="Event3">New</span>
+  <span class="Expire">EXP: 00:00</span>
+  </span>
+  </a></li>
+
+<li class="Blue"><a href="">
+  <span class="Right">
+    <span class="EventTime">00:00</span>
+    <span class="EventHeadline">Andersson-hjelm, sven-gördis</span>
+    <span class="EventInfo">1 roomcategory, 1 p</span>
+    <span class="EventFrom">from: Test hotel</span></span>
+    <span class="Left">
+    <span class="EventIcon"></span>
+    <span class="Event3">Pen</span>
+    <span class="Expire">EXP: 00:00</span>
+    </span>
+    </a></li>
+    
+<li class="Pink"><a href="">
+  <span class="Right">
+    <span class="EventTime">00:00</span>
+    <span class="EventHeadline">Andersson-hjelm, sven-gördis</span>
+    <span class="EventInfo">1 roomcategory, 1 p</span>
+    <span class="EventFrom">from: Test hotel</span></span>
+    <span class="Left">
+    <span class="EventIcon"></span>
+    <span class="Event3">Acc</span>
+    <span class="Expire">Acc: 00:00</span>
+    </span>
+    </a></li>
+
+<li class="Purple"><a href="">
+  <span class="Right">
+    <span class="EventTime">00:00</span>
+    <span class="EventHeadline">Andersson-hjelm, sven-gördis</span>
+    <span class="EventInfo">1 roomcategory, 1 p</span>
+    <span class="EventFrom">from: Test hotel</span></span>
+    <span class="Left">
+    <span class="EventIcon"></span>
+    <span class="Event3">Exp</span>
+    <span class="Expire">Exp: 00:00</span>
+    </span>
+    </a></li>
+
+<li class="Orange"><a href="">
+  <span class="Right">
+    <span class="EventTime">00:00</span>
+    <span class="EventHeadline">Andersson-hjelm, sven-gördis</span>
+    <span class="EventInfo">1 roomcategory, 1 p</span>
+    <span class="EventFrom">from: Test hotel</span></span>
+    <span class="Left">
+    <span class="EventIcon"></span>
+    <span class="Event3">Rej</span>
+    <span class="Expire">Rej: 00:00</span>
+    </span>
+    </a></li>
+    
+<li class="Red"><a href="">
+  <span class="Right">
+    <span class="EventTime">00:00</span>
+    <span class="EventHeadline">Andersson-hjelm, sven-gördis</span>
+    <span class="EventInfo">1 roomcategory, 1 p</span>
+    <span class="EventFrom">from: Test hotel</span></span>
+    <span class="Left">
+    <span class="EventIcon"></span>
+    <span class="Event3">War</span>
+    <span class="Expire">&nbsp;</span>
+    </span>
+    </a></li>
+    
+  </ul>
+<!--
+<div id="WrapEvent">
+<ul class="Blue">
+<li><a class="Win" href="templates/menu.html"><span class="Right"><span class="Time">00:00</span>
+  <h3>Andersson-hjelm, sven-gördis</h3>
+  <p>1 roomcategory, 1 p</p>
+  <p>from: Test hotel</p></span><p class="Icon"></p><span class="Left">
+  <h1>Pen</h1>EXP: 00:00</span></a></li>
+</ul>
+</div>-->
+
+
+
+
+<div class="ColControl">
+<p>Showing Events 1 - 6 of 6</p>
+<ul>
+<li><a href=""><span class="PrevIcon"></span>Prev</a></li>
+<li><a href="">All</a></li>
+<li><a href=""><span class="NextIcon"></span>Next</a></li>
+</ul>
+</div>
+
+<div class="ColFoot">
+<ul>
+<li><a href=""><span class="FootButton">New Booking</span></a></li></ul>
+</div>
 </div>
 
 
 
 
 
-<div id="Warnings">
-<div id="PanelHead">
-<h1>Warnings</h1>
-<p>Today:<span class="HeadInfo">0</span>New:<span class="HeadInfo">0</span></p>
-</div>
-<div id="PanelContent">
 
-<ul class="Link"> 
-<li>
-<a href="#">
-  <span class="LeftSpace">
-  <h3 class="InfoCol">Status</h3>
-  <p>00:00</p>
-  </span>
-  <span class="RightSpace">
-  <h3>Warningtype</h3>
-  <p>Source Hotel</p>
-  </span>
-</a>
-</li>
+<div id="Col3">
+<div class="ColHead">
+<span class="Left"><span class="HeadLine">Overview</span></span>
+</div>
+
+<div id="WrapDetails">
+<ul>
+<li class="Title"><h1>NW</h1></li>
+<li class="Left"><h2>00.0%</h2></li>
+<li class="Right"><h2>Occupancy</h2></li>
+<li class="Left"><h2>0000</h2></li>
+<li class="Right"><h2>Available rooms</h2></li>
+<li class="Left"><h2>0000</h2></li>
+<li class="Right"><h2>Available hotels</h2></li>
+<li class="Space"></li>
+<li class="Left">0000</li>
+<li class="Right">Rooms Total</li>
+<li class="Left">0000</li>
+<li class="Right">Hotels Total</li>
+<li class="Left">0000</li>
+<li class="Right">rooms Overbooked</li>
+<li class="Left">0000</li>
+<li class="Right">Hotels Overbooked</li>
+<li class="Left">0000</li>
+<li class="Right">Hotels Full</li>
+</ul>
+</div>
+
+<ul class="WrapArea"><li class="Link"><a href=""><span class="Area">NW</span>0000</a></li></ul>
+<ul class="WrapArea"><li class="Link"><a href=""><span class="Area">N</span>0000</a></li></ul>
+<ul class="WrapArea"><li class="Link"><a href=""><span class="Area">NE</span>0000</a></li></ul>
+<ul class="WrapArea"><li class="Link"><a href=""><span class="Area">W</span>0000</a></li></ul>
+<ul class="WrapArea"><li class="Link"><a href=""><span class="Area">City</span>0000</a></li></ul>
+<ul class="WrapArea"><li class="Link"><a href=""><span class="Area">NE</span>0000</a></li></ul>
+<ul class="WrapArea"><li class="Link"><a href=""><span class="Area">SW</span>0000</a></li></ul>
+<ul class="WrapArea"><li class="Link"><a href=""><span class="Area">s</span>0000</a></li></ul>
+<ul class="WrapArea"><li class="Link"><a href=""><span class="Area">SE</span>0000</a></li></ul>
+
+<div id="WrapCity"><a href=""><span class="Area">Stockholm</span>0000</a></div>
+
+
+<div class="ColFoot">
+<ul>
+<li><a href=""><span class="FootButton">Favourites</span></a></li></ul>
+</div>
+</div>
+
+</div>
+
+<div style="display:none">
+<div id="AvailOneWrap">
+<p class="RoomCatName">Roomcategory</p>
+
+<ul class="ValDesc">
+<li class="ValName">&nbsp;</li>
+<li>Available rooms</li>
+<li>Discount:</li>
+<li>Commission:</li>
 </ul>
 
-<ul class="Link"> 
-<li>
-<a href="#">
-  <span class="LeftSpace">
-  <h3 class="InfoCol">Status</h3>
-  <p>00:00</p>
-  </span>
-  <span class="RightSpace">
-  <h3>Warningtype</h3>
-  <p>Source Hotel</p>
-  </span>
-</a>
-</li>
+<ul class="CurVal">
+<li class="ValName">Current Value:</li>
+<li>0</li>
+<li>000</li>
+<li>00%</li>
 </ul>
 
-<ul class="Link"> 
-<li>
-<a href="#">
-  <span class="LeftSpace">
-  <h3 class="InfoCol">Status</h3>
-  <p>00:00</p>
-  </span>
-  <span class="RightSpace">
-  <h3>Warningtype</h3>
-  <p>Source Hotel</p>
-  </span>
-</a>
-</li>
+<ul class="NewVal">
+<li class="ValName">New Value:</li>
+<li><input name="Rooms" type="text" class="FormAvailRoom" value="0" size="5" maxlength="5" /></li>
+<li><input name="Discount" type="text" class="FormAvailRoom" value="0" size="5" maxlength="8" /></li>
+<li><input name="Commission" type="text" class="FormAvailRoom" value="0" size="5" maxlength="2" /></li>
 </ul>
 
-
-
-
-
-
-</div>
-<div id="PanelInfo">Showing <span class="StatusCol">1-3</span> Warnings of <span class="StatusCol">99</span> | <span class="ShowMore"><a href="#">Previous</a> <a href="#">Next</a></span></div>
-<div id="PanelFoot"><a href="">New warning</a><a href="">Show Today</a></div>
-</div>
-
-
-
-
-
-
+<ul class="ButtonUl">
+<li class="ValName">&nbsp;</li>
+<li>&nbsp;</li>
+<li><a href=""><span class="Button">Save</span></a></li>
+<li><a href=""><span class="Button">close</span></a></li>
+</ul>
 
 </div>
-<?php }?>
+</div>
