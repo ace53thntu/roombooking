@@ -4,6 +4,7 @@ class RoomController extends Zend_Controller_Action {
 	private $hotel;
 	private $room;
 	private $discount;
+	private $commission;
 	private $calendarPrice;
 	private $rate;
 	private $customer;
@@ -13,6 +14,7 @@ class RoomController extends Zend_Controller_Action {
 		$this->hotel = new Hotel();
 		$this->room = new Room();
 		$this->discount = new Discount();
+		$this->commission = new Commission();
 		$this->calendarPrice = new CalendarPrice();
 		$this->rate = new Rate();
 		$this->customer = new Customer();
@@ -92,12 +94,19 @@ class RoomController extends Zend_Controller_Action {
                         	Room::AVAILABLE => trim($form->getValue("available"))
                         );
                         $room = $this->room->updateRoom($data);
+                        $currentTime = $this->_helper->generator->generateCurrentTime();
                         // add discount if any.
                         $discount = $form->getValue("discount");
-                        if (!empty($discount)) {
-                        	$this->discount->addOrUpdateDiscount($room->id, $discount);
+                        if ($discount != 0) {
+                        	$this->discount->addOrUpdateDiscount($room->id, $discount, $currentTime, $currentTime);
+                        }
+                    	// add commission if any.
+                        $commission = $form->getValue("commission");
+                        if ($commission != 0) {
+                        	$this->commission->addOrUpdateCommission($room->id, $commission, $currentTime, $currentTime);
                         }
                         $db->commit();
+                        $this->_redirect("/index/formsucceed");
                     }
                 }
             } else {
@@ -339,55 +348,48 @@ class RoomController extends Zend_Controller_Action {
             $user = $this->_helper->user->getUserData();
             
             print_r($_POST);
-            exit;
-            $roomIds = $this->_getParam("chk");
-            if (isset($roomIds)) {
-            	$form = new SendRequestForm($user, $roomIds);
-            	$this->view->form = $form;
-            	if ($this->getRequest ()->isPost ()) {
-                    if ($form->isValid ( $_POST )) {
-                    	$db = Zend_Registry::get("db");
-                    	$db->beginTransaction();
-                    	$data = array(
-                    		Customer::SOCIAL_SECURITY_NUMBER => $form->getValue(Customer::SOCIAL_SECURITY_NUMBER),
-                    		Customer::FIRST_NAME => $form->getValue(Customer::FIRST_NAME),
-                    		Customer::LAST_NAME => $form->getValue(Customer::LAST_NAME),
-                    		Customer::PHONE => $form->getValue(Customer::PHONE)
-                    	);
-						$customerId = $this->customer->addCustomer($data);
+//            exit;
+            $roomIds = $this->_getParam("roomIds");
+            foreach ($roomIds as $roomId) {
+            	$db = Zend_Registry::get("db");
+                $db->beginTransaction();
+                $data = array(
+                	Customer::SOCIAL_SECURITY_NUMBER => $this->_getParam(Customer::SOCIAL_SECURITY_NUMBER),
+                	Customer::FIRST_NAME => $this->_getParam(Customer::FIRST_NAME),
+                	Customer::LAST_NAME => $this->_getParam(Customer::LAST_NAME),
+                	Customer::PHONE => $this->_getParam(Customer::PHONE)
+                );
+				$customerId = $this->customer->addCustomer($data);
 						
-                    	$roomIdsArr = $this->_getParam("roomIds");
-                    	foreach ($roomIdsArr as $roomId) {
-                    		$room = $this->room->findById($roomId);
-                    		$fromHotel = Room::getHotel($room);
-                    		$rate = Room::getRoomRate($room);
-                    		$data = array(
-                    			Booking::ROOM_ID => $roomId,
-                    			Booking::CUSTOMER => $customerId,
-                    			Booking::FROM_USER => $this->_getParam(Booking::FROM_USER),
-                    			Booking::FROM_HOTEL => $this->_getParam(Booking::FROM_HOTEL),
-                    			Booking::TO_HOTEL => $fromHotel->id,
-                    			Booking::FROM_DATE => $this->_getParam(Booking::FROM_DATE),
-                    			Booking::TO_DATE => $this->_getParam(Booking::TO_DATE),
-                    			Booking::NUMER_OF_PERSON => $this->_getParam(Booking::NUMER_OF_PERSON),
-                    			Booking::STATUS => BookingStatus::PENDING,
-                    			Booking::ARRIVAL_TIME => $this->_getParam(Booking::ARRIVAL_TIME),
-                    			Booking::RATE => isset($rate) ? $rate->id : null,
-                    			Booking::CALENDAR => null,
-                    			Booking::DISCOUNT => null,
-                    			booking::COMMISSION => null,
-                    			Booking::CREATED => $this->_helper->generator->generateCurrentTime(), 
-                    		);
-                    	}
-						$this->booking->addEntry($data);
-                    	$db->commit();
-                    }
-            	}
-            	
-            } else {
-            	throw new Zend_Exception("No room has been chosen!");
+                $roomIdsArr = $this->_getParam("roomIds");
+                foreach ($roomIdsArr as $roomId) {
+                	$room = $this->room->findById($roomId);
+                	$fromHotel = Room::getHotel($room);
+                	$rate = $this->rate->findBestRate($room->id, $this->_getParam(Booking::NUMBER_OF_PERSON));
+                	$calendarPrices = Room::getCalendarPrices($room);
+                	$data = array(
+                		Booking::ROOM_ID => $roomId,
+                		Booking::CUSTOMER => $customerId,
+                		Booking::FROM_USER => $this->_getParam(Booking::FROM_USER),
+                		Booking::FROM_HOTEL => $this->_getParam(Booking::FROM_HOTEL),
+                		Booking::TO_HOTEL => $fromHotel->id,
+                		Booking::FROM_DATE => $this->_getParam(Booking::FROM_DATE),
+                		Booking::TO_DATE => $this->_getParam(Booking::TO_DATE),
+                		Booking::NUMBER_OF_PERSON => $this->_getParam(Booking::NUMBER_OF_PERSON),
+                		Booking::NUMBER_OF_ROOM => $this->_getParam(Booking::NUMBER_OF_ROOM),
+                		Booking::STATUS => BookingStatus::PENDING,
+                		Booking::ARRIVAL_TIME => $this->_getParam(Booking::ARRIVAL_TIME),
+                		Booking::RATE => isset($rate) ? $rate->id : null,
+                		Booking::CALENDAR => isset($calendarPrices) ? $calendarPrices->current()->id : null,
+                		Booking::DISCOUNT => Room::getDiscount($room),
+                		Booking::COMMISSION => Room::getCommission($room),
+                    	Booking::CREATED => $this->_helper->generator->generateCurrentTime(), 
+                    );
+                }
+				$this->booking->addEntry($data);
+                $db->commit();
             }
-            
+            $this->_redirect("/");
         } else {
             $this->_redirect( "/user/login?next=".urlencode($this->_helper->generator->getCurrentURI()) );
         }

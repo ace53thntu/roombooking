@@ -48,7 +48,12 @@ class SendRequestForm extends Zend_Form {
 		$element->setDescription("Checkout date (2011-01-10)");
 		$this->addElement($element);
 		
-		$element = new Zend_Form_Element_Text(Booking::NUMER_OF_PERSON);
+		$element = new Zend_Form_Element_Text(Booking::NUMBER_OF_ROOM);
+		$element->setLabel("Number of rooms");
+		$element->setDescription("Number of room to book");
+		$this->addElement($element);
+		
+		$element = new Zend_Form_Element_Text(Booking::NUMBER_OF_PERSON);
 		$element->setLabel("Number of person");
 		$element->setDescription("Number of person to live in");
 		$this->addElement($element);

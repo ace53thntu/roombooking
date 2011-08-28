@@ -12,6 +12,7 @@ $config = Zend_Registry::get ( "config" );
 <meta name="description" content="FLLHAUS Direct booking system" />
 <?php
 $this->headLink ()->prependStylesheet ( $config->baseurl . '/css/default.css' );
+$this->headLink ()->prependStylesheet ( $config->baseurl . '/css/jquery.fancybox-1.3.4.css' );
 //$this->headLink ()->prependStylesheet ( $config->baseurl . '/css/fancy.css' );
 //$this->headLink ()->prependStylesheet ( $config->baseurl . '/css/slide.css' );
 //$this->headLink ()->prependStylesheet ( $config->baseurl . '/css/styles.css' );
@@ -19,8 +20,9 @@ $this->headLink ()->prependStylesheet ( $config->baseurl . '/css/default.css' );
 				
 $this->headScript ()->prependFile ( $config->baseurl . '/js/boxparameters.js' );
 $this->headScript ()->prependFile ( $config->baseurl . '/js/jquery.fancybox-1.3.4.pack.js' );
-$this->headScript ()->prependFile ( $config->baseurl . '/js/menuslide/slide.js' );
+//$this->headScript ()->prependFile ( $config->baseurl . '/js/menuslide/slide.js' );
 $this->headScript ()->prependFile ( $config->baseurl . '/js/jquery.easing.1.3.js' );
+$this->headScript ()->prependFile ( $config->baseurl . '/js/jquery.mousewheel-3.0.4.pack.js');
 $this->headScript ()->prependFile ( $config->baseurl . '/js/jquery.1.4.3.min.js' );
 echo $this->headLink ();
 
@@ -39,7 +41,36 @@ echo $this->layout ()->content;
 </body>
 
 
-<!--Fancybox options--> 
+<!--Fancybox options-->
+<script type="text/javascript">
+$(document).ready(function() {
+	/* This is basic - uses default settings */
+	$("a#single_image").fancybox();
+	
+	/* Using custom settings */
+	
+	$("a#inline").fancybox({
+		'hideOnContentClick': true
+	});
+
+	/* Apply fancybox to multiple items */
+	
+	$("a.various1").fancybox({
+		'scrolling': 'yes',
+		'width': 500,
+		'autoScale' : true,
+		'transitionIn' : 'none',
+		'transitionOut' : 'none',
+		'type' : 'iframe',
+		'hideOnContentClick' : false,
+		'onClosed': function() {
+			parent.location.reload(true);
+		} 
+	});
+	
+}); 
+</script>
+
 <!--
 <script type="text/javascript">
         $(document).ready(function() {

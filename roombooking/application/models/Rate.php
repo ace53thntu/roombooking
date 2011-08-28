@@ -93,6 +93,22 @@ class Rate extends Zend_Db_Table_Abstract {
     }
     
     /**
+     * Find best rate for given room, best rate is the lowest price for given number of person.
+     * 
+     * @param $roomId
+     * @param $numberOfPerson
+     */
+    public function findBestRate($roomId, $numberOfPerson) {
+    	$where = $this->select()->where("room_id=?", $roomId)->where("person_number>=?", $numberOfPerson)->order("price ASC");
+    	$rates = $this->fetchAll($where);
+    	if (!empty($rates)) {
+    		return $rates->current();
+    	} else {
+    		return null;
+    	}
+    }
+    
+    /**
      * Get rate name.
      * 
      * @param $rate

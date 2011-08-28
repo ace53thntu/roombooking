@@ -9,14 +9,49 @@ class Booking extends Zend_Db_Table_Abstract {
 	const CUSTOMER = "customer_id";
 	const FROM_DATE = "from_date";
 	const TO_DATE = "to_date";
-	const NUMER_OF_PERSON = "number_of_person";
+	const NUMBER_OF_ROOM = "number_of_room";
+	const NUMBER_OF_PERSON = "number_of_person";
 	const STATUS = "status";
 	const RATE = "rate_id";
 	const CALENDAR = "calendar_price_id";
 	const DISCOUNT = "discount";
 	const COMMISSION = "commission";
 	const ARRIVAL_TIME = "arrival_time";
+	const EXPIRED_DATE = "expired_date";
 	const CREATED = "created";
+	
+	protected $_referenceMap = array(
+		'FromHotel' => array(
+			'columns' => 'from_hotel',
+			'refTableClass' => 'Hotel',
+			'refColumns' => 'id'	
+		),
+		'ToHotel' => array(
+			'columns' => 'to_hotel',
+			'refTableClass' => 'Hotel',
+			'refColumns' => 'id'
+		),
+		'FromUser' => array(
+			'columns' => 'from_user',
+			'refTableClass' => 'User',
+			'refColumns' => 'id'
+		),
+		'ActionUser' => array(
+			'columns' => 'action_user',
+			'refTableClass' => 'User',
+			'refColumns' => 'id'
+		),
+		'Room' => array(
+			'columns' => 'room_id',
+			'refTableClass' => 'Room',
+			'refColumns' => 'id'
+		),
+		'Customer' => array(
+			'columns' => 'customer_id',
+			'refTableClass' => 'Customer',
+			'refColumns' => 'id'
+		),
+	);
 	
 	/**
 	 * Add one booking record.

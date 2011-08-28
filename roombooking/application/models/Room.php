@@ -16,8 +16,10 @@ class Room extends Zend_Db_Table_Abstract {
 	
 	protected $_dependentTables = array(
        'Discount',
+	   'Commission',
 	   'CalendarPrice',
-	   'Rate'
+	   'Rate',
+	   'Booking'
     );
 	
 	protected $_referenceMap = array (
@@ -152,6 +154,19 @@ class Room extends Zend_Db_Table_Abstract {
     	$discounts = $room->findDependentRowset("Discount", "Room");
     	if (count($discounts) > 0) {
     		return $discounts->current()->discount;
+    	} else {
+    		return 0;
+    	}
+    }
+    
+	/**
+     * Get room's commission.
+     * @param $room
+     */
+    public static function getCommission($room) {
+    	$commissions = $room->findDependentRowset("Commission", "Room");
+    	if (count($commissions) > 0) {
+    		return $commissions->current()->commission;
     	} else {
     		return 0;
     	}

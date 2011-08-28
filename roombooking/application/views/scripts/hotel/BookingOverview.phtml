@@ -1,0 +1,74 @@
+<ul class="Event">
+<?php 
+foreach ($this->bookings as $booking) {
+if ($booking->type=="New") {?>
+	<li class="Green"><a href="">
+    <span class="Right">
+    <span class="EventTime"><?php echo $booking->created?></span>
+    <span class="EventHeadline"><?php echo $booking->toHotel->name?></span>
+    <span class="EventInfo"><?php echo $booking->numberOfRoom?> <?php echo $booking->room->key?>, <?php $booking->numberOfPerson?> p</span>
+    <span class="EventFrom">from: <?php echo $booking->fromHotel->name?><span class="EventIcon"></span></span></span>
+    <span class="Left">
+    <span class="EventIcon"></span>
+    <span class="Event3">New</span>
+    <span class="Expire">EXP: 00:00</span>
+    </span>
+    </a></li>
+<?php } else if ($booking->type == "Pending") {?>
+	<li class="Blue"><a href="">
+    <span class="Right">
+    <span class="EventTime"><?php echo $booking->created?></span>
+    <span class="EventHeadline"><?php echo $booking->toHotel->name?></span>
+    <span class="EventInfo"><?php echo $booking->numberOfRoom?> <?php echo $booking->room->key?>, <?php $booking->numberOfPerson?> p</span>
+    <span class="EventFrom">from: <?php echo $booking->fromHotel->name?><span class="EventIcon"></span></span></span>
+    <span class="Left">
+    <span class="EventIcon"></span>
+    <span class="Event3">PEN</span>
+    <span class="Expire">EXP: 00:00</span>
+    </span>
+    </a></li>
+<?php } else if ($booking->type == "Accepted") {?>
+	<li class="Pink"><a href="">
+    <span class="Right">
+    <span class="EventTime"><?php echo $booking->created?></span>
+    <span class="EventHeadline"><?php echo $booking->toHotel->name?></span>
+    <span class="EventInfo"><?php echo $booking->numberOfRoom?> <?php echo $booking->room->key?>, <?php $booking->numberOfPerson?> p</span>
+    <span class="EventFrom">from: <?php echo $booking->fromHotel->name?><span class="EventIcon"></span></span></span>
+    <span class="Left">
+    <span class="EventIcon"></span>
+    <span class="Event3">ACC</span>
+    <span class="Expire">EXP: 00:00</span>
+    </span>
+<?php } else if ($booking->type == "Exipred") {
+	echo "<li class=\"Purple\">";
+}  else if ($booking->type == "Rejected") {?>
+	<li class="Orange"><a href="">
+    <span class="Right">
+    <span class="EventTime"><?php echo $booking->created?></span>
+    <span class="EventHeadline"><?php echo $booking->toHotel->name?></span>
+    <span class="EventInfo"><?php echo $booking->numberOfRoom?> <?php echo $booking->room->key?>, <?php $booking->numberOfPerson?> p</span>
+    <span class="EventFrom">from: <?php echo $booking->fromHotel->name?><span class="EventIcon"></span></span></span>
+    <span class="Left">
+    <span class="EventIcon"></span>
+    <span class="Event3">REJ</span>
+    <span class="Expire">EXP: 00:00</span>
+    </span>
+    </a></li>
+<?php }
+
+?>
+<?php }?>
+<li class="Red"><a href="">
+  <span class="Right">
+    <span class="EventTime">00:00</span>
+    <span class="EventHeadline">Andersson-hjelm, sven-gördis</span>
+    <span class="EventInfo">1 roomcategory, 1 p</span>
+    <span class="EventFrom">from: Test hotel</span></span>
+    <span class="Left">
+    <span class="EventIcon"></span>
+    <span class="Event3">War</span>
+    <span class="Expire">&nbsp;</span>
+    </span>
+    </a></li>
+    
+</ul>

@@ -4,7 +4,7 @@ echo $this->form;
 <?php if (isset($this->rooms)) { ?>
 <hr/>
 <form name="SendRequestForm" id="SendRequestForm" method="POST" action="<?php echo $this->url(array("controller"=>"room", "action"=>"sendrequest"))?>">
-<table border="0" cellspacing="0" cellpadding="0" width="800">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
 <tr>
 <td>&nbsp;</td>
 <td>Key</td>
@@ -23,7 +23,10 @@ foreach ($this->rooms as $room) {
 <td><?php echo $room->key?></td>
 <td><?php echo $room->name?></td>
 <td><?php echo $room->description?></td>
-<td><a href="<?php echo $this->url(array("controller"=>"room", "action"=>"viewroomprice"))?>" target="_blank">View Price</a></td>
+<td>
+<?php echo $this->roomPrice($room)?>
+<!--<a href="<?php echo $this->url(array("controller"=>"room", "action"=>"viewroomprice"))?>" target="_blank">View Price</a>-->
+</td>
 </tr>
 <?php
 } 
