@@ -22,14 +22,17 @@ class EditHotelRoomFormSimple extends Zend_Form {
 		$element = new Zend_Form_Element_Text("available");
 		$element->setLabel("Free Room");
 		$element->setRequired(true);
+		$element->setValue($this->room->available);
 		$this->addElement($element);
 		
 		$element = new Zend_Form_Element_Text("discount");
 		$element->setLabel("Discount");
+		$element->setValue(Room::getDiscount($this->room));
 		$this->addElement($element);
 		
 		$element = new Zend_Form_Element_Text("commission");
 		$element->setLabel("Commission");
+		$element->setValue(Room::getCommission($this->room));
 		$this->addElement($element);
 		
 		$element = new Zend_Form_Element_Submit("Ok");

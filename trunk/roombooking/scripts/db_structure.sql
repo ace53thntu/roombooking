@@ -306,7 +306,7 @@ CREATE TABLE `booking` (
   `from_date` datetime NOT NULL,
   `to_date` datetime NOT NULL,
   `number_of_person` smallint(6) NOT NULL,
-  `status` enum('pending','accepted') NOT NULL DEFAULT 'pending',
+  `status` enum('pending','accepted','rejected','expired') NOT NULL DEFAULT 'pending',
   `rate_id` int(11) NOT NULL COMMENT 'mandatory field',
   `calendar_id` int(11) DEFAULT NULL,
   `discount` double DEFAULT NULL,
@@ -437,3 +437,29 @@ CREATE TABLE  `booking`.`mail_queue` (
   KEY `activity_type_key_fk_constraint` (`activity_type`),
   CONSTRAINT `activity_type_key_fk_constraint` FOREIGN KEY (`activity_type`) REFERENCES `activity_type` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+-- 2011-08-19
+CREATE  TABLE `booking`.`commission` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `room_id` INT NOT NULL ,
+  `commission` VARCHAR(10) NULL ,
+  `created` DATETIME NOT NULL ,
+  `modified` DATETIME NOT NULL ,
+  PRIMARY KEY (`id`) ,
+  INDEX `commission_fk_constraint1` (`room_id` ASC) ,
+  CONSTRAINT `commission_fk_constraint1`
+    FOREIGN KEY (`room_id` )
+    REFERENCES `booking`.`room` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_general_ci;
+
+-- 2011-08-21
+ALTER TABLE `booking` CHANGE COLUMN `id` `id` INT(11) NOT NULL AUTO_INCREMENT  
+, ADD PRIMARY KEY (`id`) ;
+
+-- 2011-08-28
+ALTER TABLE `booking` ADD COLUMN `number_of_room` SMALLINT NOT NULL DEFAULT 1  AFTER `to_date` , ADD COLUMN `expired_date` DATETIME NULL  AFTER `arrival_time` ;

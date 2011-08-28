@@ -29,7 +29,8 @@ class Hotel extends Zend_Db_Table_Abstract {
 	
 	protected $_dependentTables = array(
        'HotelUser',
-	   'Room'
+	   'Room',
+	   'Booking'
     );
     
     protected $_referenceMap = array(
@@ -125,5 +126,56 @@ class Hotel extends Zend_Db_Table_Abstract {
     	$where = $where->order("name ASC");
     	return $this->fetchAll($where);
     }
+    
+    /**
+     * Get incoming bookings by given status for given hotel.
+     * 
+     * @param $hotel
+     * @param $status
+     * @return return list of incoming booking request
+     */
+    public static function getIncomingBookingByStatus($hotel, $status=null) {
+    	$table = new Hotel();
+    	$h = $table->findById($hotel->id);
+    	if (empty($status)) {
+    		return $h->findDependentRowset("Booking", "ToHotel", $table->select()->order("created DESC"));
+    	} else {
+    		return $h->findDependentRowset("Booking", "ToHotel", $table->select()->where("status=?", $status)->order("created DESC"));
+    	}
+    }
+    
+    /**
+     * Get outgoing booking by given status for given hotel.
+     * 
+     * @param $hotel
+     * @param $status
+     * @return return list of outgoing booking request
+     */
+    public static function getOutgoingBookingByStatus($hotel, $status=null) {
+    	$table = new Hotel();
+    	$h = $table->findById($hotel->id);
+    	if (empty($status)) {
+    		return $h->findDependentRowset("Booking", "FromHotel", $table->select()->order("created DESC"));
+    	} else {
+    		return $h->findDependentRowset("Booking", "FromHotel", $table->select()->where("status=?", $status)->order("created DESC"));
+    	}
+    }
+    
+    /**
+     * Get booking request by status, both incoming and outgoing.
+     * 
+     * @param $hotel
+     * @param $status
+     */
+    public static function getBookingByHotelAndStatus($hotel, $status) {
+    	$table = new Booking();
+    	$where = $table->select()->where("from_hotel=".$hotel->id." OR to_hotel=".$hotel->id);
+    	if (!empty($status)) {
+    		$where = $where->where("status IN (?)", $status);
+    	}
+    	$where = $where->order("created DESC");
+    	return $table->fetchAll($where);
+    }
+    
 }
 ?>

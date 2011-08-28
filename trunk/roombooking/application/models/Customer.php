@@ -6,6 +6,11 @@ class Customer extends Zend_Db_Table_Abstract {
 	const SOCIAL_SECURITY_NUMBER = "social_security_number";
 	const PHONE = "phone";
 	
+	protected $_primary = "id";
+	protected $_name = "customer";
+	
+	protected $_dependentTables = array('Booking');
+	
 	/**
 	 * Find customer by unique constraint.
 	 * 

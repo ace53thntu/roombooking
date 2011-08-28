@@ -1,8 +1,8 @@
 <?php
-class Discount extends Zend_Db_Table_Abstract {
+class Commission extends Zend_Db_Table_Abstract {
 	
 	protected $_primary = "id";
-	protected $_name = "discount";
+	protected $_name = "commission";
 	
 	protected $_referenceMap = array (
     'Room' => array (
@@ -12,8 +12,8 @@ class Discount extends Zend_Db_Table_Abstract {
     )
     );
 	
-    /**
-     * Find discount by roomId.
+	/**
+     * Find commission by roomId.
      * 
      * @param $roomId
      */
@@ -25,12 +25,12 @@ class Discount extends Zend_Db_Table_Abstract {
 	/**
 	 * 
 	 * @param $roomId
-	 * @param $discount
+	 * @param $commission
 	 */
-	public function addOrUpdateDiscount($roomId, $discount, $created, $modified) {
+	public function addOrUpdateCommission($roomId, $commission, $created, $modified) {
 		$data = array(
 		"room_id" => $roomId,
-		"discount" => $discount,
+		"commission" => $commission,
 		"created" => $created,
 		"modified" => $modified
 		);
@@ -38,7 +38,7 @@ class Discount extends Zend_Db_Table_Abstract {
 		if (empty($obj)) {
 			return $this->insert($data);
 		} else {
-			$obj->discount = $discount;
+			$obj->commission = $commission;
 			$obj->modified = $modified;
 			$obj->save();
 		}
