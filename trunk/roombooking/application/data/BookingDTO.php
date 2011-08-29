@@ -9,15 +9,16 @@ class BookingDTO {
 	public $actionUser;
 	public $room;
 	public $customer;
-	public $numberOfPerson;
-	public $numberOfRoom;
 	public $fromDate;
 	public $toDate;
+	public $expireDate;
+	public $arrivalTime;
+	public $numberOfPerson;
+	public $numberOfRoom;
 	public $rate;
 	public $calendarPrice;
 	public $discount;
 	public $commission;
-	public $arrivalTime;
 	public $created;
 }
 ?>

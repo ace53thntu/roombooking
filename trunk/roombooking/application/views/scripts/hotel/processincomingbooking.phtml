@@ -1,0 +1,9 @@
+From Hotel: 
+<?php 
+echo $this->booking->fromHotel->name
+?>, ask for <strong><?php echo $this->booking->numberOfRoom?> <?php echo $this->booking->room->key?></strong>, 
+from <?php echo $this->booking->fromDate?> to <?php echo $this->booking->toDate?>
+<p/><p/>
+
+<a href="<?php echo $this->url(array("controller"=>"hotel", "action"=>"processincomingrequestdo", "id"=>$this->booking->id, "bs"=>BookingStatus::ACCEPTED))?>">Accept</a><br/>
+<a href="<?php echo $this->url(array("controller"=>"hotel", "action"=>"processincomingrequestdo", "id"=>$this->booking->id, "bs"=>BookingStatus::REJECTED))?>">Reject</a><br/>

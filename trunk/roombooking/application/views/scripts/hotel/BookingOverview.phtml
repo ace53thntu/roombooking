@@ -2,11 +2,11 @@
 <?php 
 foreach ($this->bookings as $booking) {
 if ($booking->type=="New") {?>
-	<li class="Green"><a href="">
+	<li class="Green"><a class="various1" href="<?php echo $this->url(array("controller"=>"hotel", "action"=>"processincomingbooking", "id"=>$booking->id))?>">
     <span class="Right">
     <span class="EventTime"><?php echo $booking->created?></span>
     <span class="EventHeadline"><?php echo $booking->toHotel->name?></span>
-    <span class="EventInfo"><?php echo $booking->numberOfRoom?> <?php echo $booking->room->key?>, <?php $booking->numberOfPerson?> p</span>
+    <span class="EventInfo"><?php echo $booking->numberOfRoom?> <?php echo $booking->room->key?>, <?php echo $booking->numberOfPerson?> p</span>
     <span class="EventFrom">from: <?php echo $booking->fromHotel->name?><span class="EventIcon"></span></span></span>
     <span class="Left">
     <span class="EventIcon"></span>
