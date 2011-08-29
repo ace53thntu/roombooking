@@ -1,6 +1,7 @@
 <?php
 class Booking extends Zend_Db_Table_Abstract {
 	
+	const ID = "id";
 	const FROM_HOTEL = "from_hotel";
 	const TO_HOTEL = "to_hotel";
 	const FROM_USER = "from_user";
@@ -54,12 +55,36 @@ class Booking extends Zend_Db_Table_Abstract {
 	);
 	
 	/**
+	 * Find booking by id.
+	 * 
+	 * @param $id
+	 * @return booking
+	 */
+	public function findById($id) {
+		return $this->find($id)->current();
+	}
+	
+	/**
 	 * Add one booking record.
 	 * 
 	 * @param $data
 	 */
 	public function addEntry($data) {
 		return $this->insert($data);
+	}
+	
+	/**
+	 * Update booking
+	 * 
+	 * @param $data
+	 * @return updated booking
+	 */
+	public function updateBooking($data) {
+		if (!empty($data[Booking::ID])) {
+			$booking = $this->findById($data[Booking::ID]);
+			$booking->status = $data[Booking::STATUS];
+			$booking->save();
+		}
 	}
 }
 ?>

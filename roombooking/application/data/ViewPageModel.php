@@ -36,6 +36,9 @@ class ViewPageModel extends PageModel {
 			$bookingDTO->numberOfPerson = $booking->number_of_person;
 			$bookingDTO->numberOfRoom = $booking->number_of_room;
 			$bookingDTO->created = $booking->created;
+			$bookingDTO->fromDate = $booking->from_date;
+			$bookingDTO->toDate = $booking->to_date;
+			$bookingDTO->expireDate = $booking->expired_date;
 			if ($booking->to_hotel == $this->hotel->id && $booking->status == BookingStatus::PENDING) {
 				$bookingDTO->type = "New";
 			} else if ($booking->from_hotel == $this->hotel->id && $booking->status == BookingStatus::PENDING) {

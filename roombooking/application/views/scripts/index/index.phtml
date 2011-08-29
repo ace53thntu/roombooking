@@ -47,7 +47,7 @@ $rooms = $this->pageModel->getHotelRooms();
 <?php 
 foreach ($rooms as $room) {
 ?>
-<li class="Avail"><a class="various1" href="<?php echo $this->url(array("controller"=>"room", "action"=>"edit", "rid"=>$room->id), null, true)?>"><span class="RoomNo"><?php echo $room->available?></span><span class="HeadLine">Roomcategory</span><span class="DisCom"><span class="Dis">Discount:<?php echo Room::getDiscount($room)?>%</span><span class="Com">Commission: <?php echo Room::getCommission($room)?>%</span></span></a></li>
+<li class="Avail"><a class="various1" href="<?php echo $this->url(array("controller"=>"room", "action"=>"edit", "rid"=>$room->id), null, true)?>"><span class="RoomNo"><?php echo $room->available?></span><span class="HeadLine"><?php echo $room->name."(".$room->key.")"?></span><span class="DisCom"><span class="Dis">Discount:<?php echo Room::getDiscount($room)?>%</span><span class="Com">Commission: <?php echo Room::getCommission($room)?>%</span></span></a></li>
 <?php }?>
 </ul>
 

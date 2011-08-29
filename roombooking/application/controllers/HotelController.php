@@ -3,10 +3,12 @@ class HotelController extends Zend_Controller_Action {
 	
 	private $hotel;
 	private $hotelUser;
+	private $booking;
 	
 	public function init() {
 		$this->hotel = new Hotel();
 		$this->hotelUser = new HotelUser();
+		$this->booking = new Booking();
 	}
 	
 	/**
@@ -60,6 +62,54 @@ class HotelController extends Zend_Controller_Action {
 		}
 	}
 	
+	/**
+	 * Process incoming booking request
+	 */
+	public function processincomingbookingAction() {
+		if ($this->_helper->user->isLoggedIn()) {
+			$user = $this->_helper->user->getUserData();
+			$loggedInHotel = User::getHotel($user);
+			$booking = $this->booking->findById($this->_getParam("id"));
+			if (empty($booking)) {
+				throw new Exception("Booking id is missing!");
+			}
+            
+            $this->view->booking = $this->_helper->booking->convertToBookingDTO($booking, $loggedInHotel);
+            
+            
+//            if ($this->getRequest ()->isPost ()) {
+//	            if ($form->isValid ( $_POST )) {
+//	            	
+//	            	$this->_redirect("/index/formsucceed");
+//                }
+//            }
+		} else {
+			$this->_redirect( "/user/login?next=".urlencode($this->_helper->generator->getCurrentURI()) );
+		}
+	}
 	
+	public function processincomingrequestdoAction() {
+		if ($this->_helper->user->isLoggedIn()) {
+			$user = $this->_helper->user->getUserData();
+			$loggedInHotel = User::getHotel($user);
+			$booking = $this->booking->findById($this->_getParam("id"));
+			if (empty($booking)) {
+				throw new Exception("Booking id is missing!");
+			}
+            $bookingStatus = $this->_getParam("bs");
+            $db = Zend_Registry::get("db");
+            $db->beginTransaction();
+            $data = array(
+            	Booking::ID => $booking->id,
+            	Booking::STATUS => $bookingStatus
+            );
+            $this->booking->updateBooking($data);
+            // TODO log activity, send notification email
+            $db->commit();
+            $this->_redirect("/index/formsucceed");
+		} else {
+			$this->_redirect( "/user/login?next=".urlencode($this->_helper->generator->getCurrentURI()) );
+		}
+	}
 }
 ?>
