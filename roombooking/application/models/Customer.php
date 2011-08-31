@@ -12,6 +12,16 @@ class Customer extends Zend_Db_Table_Abstract {
 	protected $_dependentTables = array('Booking');
 	
 	/**
+	 * Find customer by id.
+	 * 
+	 * @param $id
+	 * @return customer
+	 */
+	public function findById($id) {
+		return $this->find($id)->current();
+	}
+	
+	/**
 	 * Find customer by unique constraint.
 	 * 
 	 * @param $socialSecurityNumber

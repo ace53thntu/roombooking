@@ -8,6 +8,7 @@
  *
  */
 class SessionUtil {	
+	const USER_PROFILE = "userProfile";
 	const NAME = "myData";
 	// expire in 30min
 	const EXPIRE_IN_SEC = 180000000000000;

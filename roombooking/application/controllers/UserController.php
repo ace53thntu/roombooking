@@ -2,9 +2,11 @@
 class UserController extends Zend_Controller_Action {
 	
 	private $user;
+	private $hotel;
 	
 	public function init() {
 		$this->user = new User();
+		$this->hotel = new Hotel();
 	}
 	
 	/**
@@ -20,12 +22,38 @@ class UserController extends Zend_Controller_Action {
                 $password = $form->getValue("password");
                 $next = $form->getValue("next");
                 $user = $this->user->findByLogin($userName, $password);
+                $userProfile = new UserProfile();
+                $userProfile->loggedInUser = $user;
+                
                 if (!empty($user)) {
-                	SessionUtil::setProperty("userData", $user);
-                	if (!empty($next)) {
-                		$this->_redirect($next);
+                	// if hotel id is in the request, then complete user profile and go the first page
+                	// else, show login continue page upon on user hotels.
+                	$hotelId = $this->_getParam("hotel");
+                	$hotel = $this->hotel->findById($hotelId);
+                	if (empty($hotel)) {
+	                	$hotels = User::getHotelsCanAdmin($user);
+	                	if (count($hotels)>1) {
+	                		$form = new LoginContinueForm($userName, $password, $hotels, $next);
+	                		$this->view->form = $form;
+	                	} else {
+	                		if (count($hotels) == 1) {
+	                			$userProfile->loggedInHotel = $hotels[0];
+	                		}
+		                	SessionUtil::setProperty(SessionUtil::USER_PROFILE, $userProfile);
+		                	if (!empty($next)) {
+		                		$this->_redirect($next);
+		                	} else {
+		                		$this->_redirect("/");
+		                	}
+	                	}
                 	} else {
-                		$this->_redirect("/");
+                		$userProfile->loggedInHotel = $hotel;
+                		SessionUtil::setProperty(SessionUtil::USER_PROFILE, $userProfile);
+		                if (!empty($next)) {
+		                	$this->_redirect($next);
+		                } else {
+		                	$this->_redirect("/");
+		                }
                 	}
                 }
 			}
@@ -33,7 +61,7 @@ class UserController extends Zend_Controller_Action {
 	}
 	
 	public function logoutAction() {
-		SessionUtil::setProperty("userData", null);
+		SessionUtil::setProperty(SessionUtil::USER_PROFILE, null);
 		$this->_redirect("/");
 		
 	}
