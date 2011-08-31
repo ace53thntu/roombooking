@@ -12,8 +12,8 @@ class Zend_Controller_Action_Helper_User extends Zend_Controller_Action_Helper_A
 	public function isLoggedIn() {
 //		$storage = new Zend_Auth_Storage_Session();
 //		$data = $storage->read();
-        $data = SessionUtil::getProperty("userData");
-		return isset($data);
+        $data = SessionUtil::getProperty(SessionUtil::USER_PROFILE);
+		return isset($data->loggedInUser) && isset($data->loggedInHotel);
 	}
 	
 	/**
@@ -27,8 +27,8 @@ class Zend_Controller_Action_Helper_User extends Zend_Controller_Action_Helper_A
 		$hasLoggedIn = false;
 //		$storage = new Zend_Auth_Storage_Session();
 //		$data = $storage->read();
-        $data = SessionUtil::getProperty("userData");
-		if ($data->id == $user_id) {
+        $data = SessionUtil::getProperty(SessionUtil::USER_PROFILE);
+		if ($data->loggedInUser->id == $user_id) {
 			$hasLoggedIn = true;
 		}
 		return $hasLoggedIn;
@@ -40,7 +40,17 @@ class Zend_Controller_Action_Helper_User extends Zend_Controller_Action_Helper_A
 	public function getUserData() {
 //		$storage = new Zend_Auth_Storage_Session();
 //		$data = $storage->read();
-        $data = SessionUtil::getProperty("userData");
+        $data = SessionUtil::getProperty(SessionUtil::USER_PROFILE);
+		return $table->findById($data->loggedInUser);
+	}
+	
+	/**
+	 * Return user profile.
+	 * 
+	 * @return user profile
+	 */
+	public function getUserProfile() {
+		$data = SessionUtil::getProperty(SessionUtil::USER_PROFILE);
 		return $data;
 	}
 	

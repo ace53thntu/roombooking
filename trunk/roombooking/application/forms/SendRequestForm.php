@@ -4,10 +4,18 @@ class SendRequestForm extends Zend_Form {
 	
 	private $selectedRoomIds;
 	private $fromUser;
+	private $fromHotel;
 	
-	public function SendRequestForm($fromUser, $selectedRoomIds) {
+	/**
+	 * 
+	 * @param $fromUser
+	 * @param $fromHotel
+	 * @param $selectedRoomIds
+	 */
+	public function SendRequestForm($fromUser, $fromHotel, $selectedRoomIds) {
 		$this->selectedRoomIds = $selectedRoomIds;
 		$this->fromUser = $fromUser;
+		$this->fromHotel = $fromHotel;
 		$this->__construct();
 	}
 	
@@ -33,7 +41,6 @@ class SendRequestForm extends Zend_Form {
 		$element->setValue($this->fromUser->id);
 		$this->addElement($element);
 		
-		$fromHotel = User::getHotel($this->fromUser);
 		$element = new Zend_Form_Element_Hidden(Booking::FROM_HOTEL);
 		$element->setValue($fromHotel->id);
 		$this->addElement($element);

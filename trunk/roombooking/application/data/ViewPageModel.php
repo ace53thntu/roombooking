@@ -24,6 +24,7 @@ class ViewPageModel extends PageModel {
 		$ret = array();
 		$hotel = new Hotel();
 		$room = new Room();
+		$customer = new Customer();
 		$status = array(BookingStatus::PENDING, BookingStatus::ACCEPTED, BookingStatus::REJECTED, BookingStatus::EXPIRED);
 		$bookings = Hotel::getBookingByHotelAndStatus($this->hotel, $status);
 		
@@ -39,6 +40,7 @@ class ViewPageModel extends PageModel {
 			$bookingDTO->fromDate = $booking->from_date;
 			$bookingDTO->toDate = $booking->to_date;
 			$bookingDTO->expireDate = $booking->expired_date;
+			$bookingDTO->customer = $customer->findById($booking->customer_id);
 			if ($booking->to_hotel == $this->hotel->id && $booking->status == BookingStatus::PENDING) {
 				$bookingDTO->type = "New";
 			} else if ($booking->from_hotel == $this->hotel->id && $booking->status == BookingStatus::PENDING) {

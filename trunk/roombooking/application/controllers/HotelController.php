@@ -67,8 +67,9 @@ class HotelController extends Zend_Controller_Action {
 	 */
 	public function processincomingbookingAction() {
 		if ($this->_helper->user->isLoggedIn()) {
-			$user = $this->_helper->user->getUserData();
-			$loggedInHotel = User::getHotel($user);
+			$userProfile = $this->_helper->user->getUserProfile();
+			$user = $userProfile->loggedInUser;
+			$loggedInHotel = $userProfile->loggedInHotel;
 			$booking = $this->booking->findById($this->_getParam("id"));
 			if (empty($booking)) {
 				throw new Exception("Booking id is missing!");
@@ -90,8 +91,9 @@ class HotelController extends Zend_Controller_Action {
 	
 	public function processincomingrequestdoAction() {
 		if ($this->_helper->user->isLoggedIn()) {
-			$user = $this->_helper->user->getUserData();
-			$loggedInHotel = User::getHotel($user);
+			$userProfile = $this->_helper->user->getUserProfile();
+			$user = $userProfile->loggedInUser;
+			$loggedInHotel = $userProfile->loggedInHotel;
 			$booking = $this->booking->findById($this->_getParam("id"));
 			if (empty($booking)) {
 				throw new Exception("Booking id is missing!");

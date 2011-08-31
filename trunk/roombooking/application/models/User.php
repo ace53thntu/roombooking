@@ -48,5 +48,17 @@ class User extends Zend_Db_Table_Abstract {
 			return null;
 		}
 	}
+	
+	/**
+	 * Get user's hotels which he has admin right, one user can have access to multiple hotels.
+	 * 
+	 * @param $user
+	 */
+	public static function getHotelsCanAdmin($user) {
+		$hotelUser = new HotelUser();
+		$user->setTable(new User());
+		$hotels = $user->findManyToManyRowset("Hotel", "HotelUser", "User", 'Hotel', $hotelUser->select()->where("permission_id=?", UserPermission::ADMIN));
+		return $hotels;
+	}
 }
 ?>

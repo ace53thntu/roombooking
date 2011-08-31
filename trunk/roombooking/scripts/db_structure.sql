@@ -463,3 +463,24 @@ ALTER TABLE `booking` CHANGE COLUMN `id` `id` INT(11) NOT NULL AUTO_INCREMENT
 
 -- 2011-08-28
 ALTER TABLE `booking` ADD COLUMN `number_of_room` SMALLINT NOT NULL DEFAULT 1  AFTER `to_date` , ADD COLUMN `expired_date` DATETIME NULL  AFTER `arrival_time` ;
+
+-- 2011-08-31
+ALTER TABLE `calendar_price` CHANGE COLUMN `price` `discount` SMALLINT NOT NULL DEFAULT 0  , 
+COMMENT = 'calendar price discount' , RENAME TO  `calendar_price_discount` ;
+
+ALTER TABLE `rate` DROP FOREIGN KEY `rate_fk_constratint1` ;
+
+ALTER TABLE `rate` ADD COLUMN `discount` SMALLINT NULL DEFAULT NULL COMMENT 'discount in percentage'  AFTER `price` , ADD COLUMN `calendar_price_discount` INT NULL DEFAULT NULL COMMENT 'calendar price discount in percentage'  AFTER `discount` , ADD COLUMN `comment` TEXT NULL DEFAULT NULL  AFTER `calendar_price_discount` , 
+  ADD CONSTRAINT `rate_fk_constratnt1`
+  FOREIGN KEY (`rate_name` )
+  REFERENCES `booking`.`rate_name` (`id` )
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION, 
+  ADD CONSTRAINT `rate_fk_constraint2`
+  FOREIGN KEY (`calendar_price_discount` )
+  REFERENCES `calendar_price_discount` (`id` )
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION
+, DROP INDEX `rate_unique` 
+, ADD UNIQUE INDEX `rate_unique` (`room_id` ASC, `person_number` ASC, `rate_name` ASC, `discount` ASC, `calendar_price_discount` ASC) 
+, ADD INDEX `rate_fk_constraint2` (`calendar_price_discount` ASC) ;

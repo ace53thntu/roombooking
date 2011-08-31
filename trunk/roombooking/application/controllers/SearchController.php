@@ -15,8 +15,9 @@ class SearchController extends Zend_Controller_Action {
 	public function fetchhotelajaxAction() {
 		$this->_helper->viewRenderer->setNoRender();   //view info disabled
 		$this->_helper->getHelper('layout')->disableLayout(); //template disabled
-		$user = $this->_helper->user->getUserData();
-		$hotel = User::getHotel($user);
+		$userProfile = $this->_helper->user->getUserProfile();
+		$user = $userProfile->loggedInUser;
+		$hotel = $userProfile->loggedInHotel;
 		$excludeHotelIds = array(
 			$hotel->id => $hotel->id
 		);
@@ -38,8 +39,9 @@ class SearchController extends Zend_Controller_Action {
 		$this->_helper->viewRenderer->setNoRender();   //view info disabled
 		$this->_helper->getHelper('layout')->disableLayout(); //template disabled
 		
-		$user = $this->_helper->user->getUserData();
-		$hotel = User::getHotel($user);
+		$userProfile = $this->_helper->user->getUserProfile();
+		$user = $userProfile->loggedInUser;
+		$hotel = $userProfile->loggedInHotel;
 		$excludeHotelIds = array(
 			$hotel->id => $hotel->id
 		);

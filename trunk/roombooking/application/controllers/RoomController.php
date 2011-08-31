@@ -26,8 +26,9 @@ class RoomController extends Zend_Controller_Action {
 	 */
 	public function addAction() {
 		if ($this->_helper->user->isLoggedIn()) {
-			$user = $this->_helper->user->getUserData();
-			$hotel = User::getHotel($user);
+			$userProfile = $this->_helper->user->getUserProfile();
+			$user = $userProfile->loggedInUser;
+			$hotel = $userProfile->loggedInHotel;
             if (!empty($hotel)) {
             	
             	$pageModel = new ViewPageModel();
@@ -54,6 +55,7 @@ class RoomController extends Zend_Controller_Action {
 	                	$db->beginTransaction();
 	                	$this->room->addRoom($data);
 	                	$db->commit();
+	                	$this->_redirect("/");
 	                }
 	            }
 			} else {
@@ -70,8 +72,9 @@ class RoomController extends Zend_Controller_Action {
 	 */
 	public function editAction() {
 	   if ($this->_helper->user->isLoggedIn()) {
-            $user = $this->_helper->user->getUserData();
-            $hotel = User::getHotel($user);
+            $userProfile = $this->_helper->user->getUserProfile();
+			$user = $userProfile->loggedInUser;
+			$hotel = $userProfile->loggedInHotel;
             if (!empty($hotel)) {
                 
                 $pageModel = new ViewPageModel();
@@ -279,8 +282,9 @@ class RoomController extends Zend_Controller_Action {
 		$config = Zend_Registry::get("config");
 		$this->view->headScript ()->appendFile ( $config->baseurl . '/js/search.js' ); 
 	    if ($this->_helper->user->isLoggedIn()) {
-            $user = $this->_helper->user->getUserData();
-            $hotel = User::getHotel($user);
+            $userProfile = $this->_helper->user->getUserProfile();
+			$user = $userProfile->loggedInUser;
+			$hotel = $userProfile->loggedInHotel;
             if (!empty($hotel)) {
                 
                 $pageModel = new ViewPageModel();
@@ -325,11 +329,13 @@ class RoomController extends Zend_Controller_Action {
 	 */
 	public function sendrequestAction() {
 		if ($this->_helper->user->isLoggedIn()) {
-            $user = $this->_helper->user->getUserData();
+            $userProfile = $this->_helper->user->getUserProfile;
+            $user = $userProfile->loggedInUser;
+            $hotel = $userProfile->loggedInHotel;
             
             $roomIds = $this->_getParam("chk");
             if (isset($roomIds)) {
-            	$form = new SendRequestForm($user, $roomIds);
+            	$form = new SendRequestForm($user, $hotel, $roomIds);
             	$this->view->form = $form;            	
             } else {
             	throw new Zend_Exception("No room has been chosen!");

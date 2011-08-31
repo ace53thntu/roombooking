@@ -8,14 +8,13 @@ class Zend_View_Helper_LoggedInUser {
 	function loggedInUser() {
 //		$storage = new Zend_Auth_Storage_Session();
 //        $data = $storage->read();
-        $data = SessionUtil::getProperty("userData");
+        $data = SessionUtil::getProperty(SessionUtil::USER_PROFILE);
 //		$auth = Zend_Auth::getInstance();
 //		
 //		if($auth->hasIdentity()) {
 //			return $auth->getIdentity();
 //		}
-        $table = new User();
-		return $table->findById($data->id);
+		return $data->loggedInUser;
 	}
 }
 ?>
