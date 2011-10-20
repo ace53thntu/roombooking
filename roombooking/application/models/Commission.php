@@ -43,5 +43,17 @@ class Commission extends Zend_Db_Table_Abstract {
 			$obj->save();
 		}
 	}
+	
+	/**
+	 * Delete commission by room id.
+	 * 
+	 * @param $roomId
+	 */
+	public function deleteByRoom($roomId) {
+		$commission = $this->findByRoom($roomId);
+		if (!empty($commission)) {
+			$commission->delete();
+		}
+	}
 }
 ?>

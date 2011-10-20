@@ -1,14 +1,17 @@
 <?php
-class CalendarPrice extends Zend_Db_Table_Abstract {
+/**
+ * @deprecated
+ */
+class CalendarPriceDiscount extends Zend_Db_Table_Abstract {
 	
 	const ROOM = "room_id";
 	const CALENDAR = "calendar_id";
-	const PRICE = "price";
+	const DISCOUNT = "discount";
 	const CREATED = "created";
 	const MODIFIED = "modified";
 	
 	protected $_primary = "id";
-	protected $_name = "calendar_price";
+	protected $_name = "calendar_price_discount";
 	
     protected $_referenceMap = array (
     'Room' => array (

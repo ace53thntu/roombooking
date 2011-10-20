@@ -1,0 +1,8 @@
+From Hotel: 
+<?php 
+echo $this->booking->fromHotel->name
+?>, ask for <strong><?php echo $this->booking->numberOfRoom?> <?php echo $this->booking->room->key?></strong>, 
+from <?php echo $this->booking->fromDate?> to <?php echo $this->booking->toDate?>
+<p/><p/>
+<a href="<?php echo $this->url(array("controller"=>"booking", "action"=>"delivercustomer","id"=>$this->booking->id))?>">Deliver Customer</a><br/>
+<a href="">Cancel</a>

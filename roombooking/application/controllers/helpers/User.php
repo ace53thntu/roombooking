@@ -41,7 +41,7 @@ class Zend_Controller_Action_Helper_User extends Zend_Controller_Action_Helper_A
 //		$storage = new Zend_Auth_Storage_Session();
 //		$data = $storage->read();
         $data = SessionUtil::getProperty(SessionUtil::USER_PROFILE);
-		return $table->findById($data->loggedInUser);
+		return $data->loggedInUser;
 	}
 	
 	/**

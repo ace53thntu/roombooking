@@ -4,11 +4,15 @@ class HotelController extends Zend_Controller_Action {
 	private $hotel;
 	private $hotelUser;
 	private $booking;
+	private $user;
+	private $room;
 	
 	public function init() {
 		$this->hotel = new Hotel();
 		$this->hotelUser = new HotelUser();
 		$this->booking = new Booking();
+		$this->user = new User();
+		$this->room = new Room();
 	}
 	
 	/**
@@ -17,9 +21,9 @@ class HotelController extends Zend_Controller_Action {
 	public function addAction() {
 		if ($this->_helper->user->isLoggedIn()) {
 			$user = $this->_helper->user->getUserData();
+			print_r($user);
             $form = new AddHotelForm(209, null);
             $this->view->form = $form;
-            
             if ($this->getRequest ()->isPost ()) {
 	            if ($form->isValid ( $_POST )) {
 	            	$data = array(

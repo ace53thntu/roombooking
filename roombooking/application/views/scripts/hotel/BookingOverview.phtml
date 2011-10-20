@@ -1,6 +1,6 @@
 <ul class="Event">
 <?php 
-foreach ($this->bookings as $booking) {
+foreach ($this->bookingOverviewPaginator as $booking) {
 if ($booking->type=="New") {?>
 	<li class="Green"><a class="various1" href="<?php echo $this->url(array("controller"=>"hotel", "action"=>"processincomingbooking", "id"=>$booking->id))?>">
     <span class="Right">
@@ -28,7 +28,7 @@ if ($booking->type=="New") {?>
     </span>
     </a></li>
 <?php } else if ($booking->type == "Accepted") {?>
-	<li class="Pink"><a href="">
+	<li class="Pink"><a class="various1" href="<?php echo $this->url(array("controller"=>"booking", "action"=>"processaccepted", "id"=>$booking->id))?>">
     <span class="Right">
     <span class="EventTime"><?php echo $booking->created?></span>
     <span class="EventHeadline"><?php echo $booking->customer->last_name.", ".$booking->customer->first_name?></span>
@@ -55,10 +55,38 @@ if ($booking->type=="New") {?>
     <span class="Expire">EXP: 00:00</span>
     </span>
     </a></li>
+<?php } else if ($booking->type == "Delivered") {?>
+	<li class="GRAY"><a class="various1" href="<?php echo $this->url(array("controller"=>"booking", "action"=>"processdelivered", "id"=>$booking->id))?>">
+    <span class="Right">
+    <span class="EventTime"><?php echo $booking->created?></span>
+    <span class="EventHeadline"><?php echo $booking->customer->last_name.", ".$booking->customer->first_name?></span>
+    <span class="EventInfo"><?php echo $booking->numberOfRoom?> <?php echo $booking->room->key?>, <?php echo $booking->numberOfPerson?> p</span>
+    <span class="EventFrom">from: <?php echo $booking->fromHotel->name?><span class="EventIcon"></span></span></span>
+    <span class="Left">
+    <span class="EventIcon"></span>
+    <span class="Event3">DEL</span>
+    <span class="Expire">EXP: 00:00</span>
+    </span>
+    </a></li>
+<?php } else if ($booking->type == "Confirmed") {?>
+	<li class="GLODENROD"><a href="">
+    <span class="Right">
+    <span class="EventTime"><?php echo $booking->created?></span>
+    <span class="EventHeadline"><?php echo $booking->customer->last_name.", ".$booking->customer->first_name?></span>
+    <span class="EventInfo"><?php echo $booking->numberOfRoom?> <?php echo $booking->room->key?>, <?php echo $booking->numberOfPerson?> p</span>
+    <span class="EventFrom">from: <?php echo $booking->fromHotel->name?><span class="EventIcon"></span></span></span>
+    <span class="Left">
+    <span class="EventIcon"></span>
+    <span class="Event3">Con</span>
+    <span class="Expire">EXP: 00:00</span>
+    </span>
+    </a></li>
 <?php }
 
 ?>
 <?php }?>
+
+<!--
 <li class="Red"><a href="">
   <span class="Right">
     <span class="EventTime">00:00</span>
@@ -71,5 +99,6 @@ if ($booking->type=="New") {?>
     <span class="Expire">&nbsp;</span>
     </span>
     </a></li>
-    
+-->    
 </ul>
+<?php echo $this->paginationControl($this->bookingOverviewPaginator, 'Sliding', 'pagination.phtml'); ?>

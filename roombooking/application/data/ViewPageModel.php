@@ -2,6 +2,7 @@
 class ViewPageModel extends PageModel {
 	
 	public $hotel;
+	public $selectedRoom;
 	
 	/**
 	 * Get hotel rooms by given hotel.
@@ -25,7 +26,7 @@ class ViewPageModel extends PageModel {
 		$hotel = new Hotel();
 		$room = new Room();
 		$customer = new Customer();
-		$status = array(BookingStatus::PENDING, BookingStatus::ACCEPTED, BookingStatus::REJECTED, BookingStatus::EXPIRED);
+		$status = array(BookingStatus::PENDING, BookingStatus::ACCEPTED, BookingStatus::REJECTED, BookingStatus::EXPIRED, BookingStatus::DELIVERED, BookingStatus::CONFIRMED);
 		$bookings = Hotel::getBookingByHotelAndStatus($this->hotel, $status);
 		
 		foreach ($bookings as $booking) {
@@ -41,6 +42,7 @@ class ViewPageModel extends PageModel {
 			$bookingDTO->toDate = $booking->to_date;
 			$bookingDTO->expireDate = $booking->expired_date;
 			$bookingDTO->customer = $customer->findById($booking->customer_id);
+			
 			if ($booking->to_hotel == $this->hotel->id && $booking->status == BookingStatus::PENDING) {
 				$bookingDTO->type = "New";
 			} else if ($booking->from_hotel == $this->hotel->id && $booking->status == BookingStatus::PENDING) {
@@ -49,6 +51,10 @@ class ViewPageModel extends PageModel {
 				$bookingDTO->type = "Accepted";
 			} else if ($booking->from_hotel == $this->hotel->id && $booking->status == BookingStatus::REJECTED) {
 				$bookingDTO->type = "Rejected";
+			} else if ($booking->to_hotel == $this->hotel->id && $booking->status == BookingStatus::DELIVERED) {
+				$bookingDTO->type = "Delivered";
+			} else if ($booking->from_hotel == $this->hotel->id && $booking->status == BookingStatus::CONFIRMED) {
+				$bookingDTO->type = "Confirmed";
 			}
 			$ret[$booking->id] = $bookingDTO;
 		}

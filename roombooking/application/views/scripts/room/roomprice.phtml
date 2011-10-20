@@ -1,32 +1,13 @@
 <h1>Price definition of Room <?php echo $this->pageModel->room->name?>, Hotel <?php echo $this->pageModel->getHotel()->name?></h1>
 
-<strong>Calendar:</strong>
-<table border="0" cellspacing="0" cellpadding="0" width="800">
-<tr>
-<td>Period</td>
-<td>Price</td>
-</tr>
-<?php 
-foreach($this->pageModel->getCalendarPrices() as $calendarPriceDTO) {
-?>
-<tr>
-<td><?php echo $calendarPriceDTO->calendar->name?> (<?php echo $calendarPriceDTO->calendar->from?> - <?php echo $calendarPriceDTO->calendar->to?>)</td>
-<td><?php echo $calendarPriceDTO->price?></td>
-</tr>
-<?php }?>
-<tr>
-<td colspan="2">
-<a href="<?php echo $this->url(array("controller"=>"room", "action"=>"addcalendarprice", "rid"=>$this->pageModel->room->id))?>"/>Add New</a>
-</td>
-</tr>
-</table>
-<hr/>
+
 <strong>Rate</strong>
-<table border="0" cellspacing="0" cellpadding="0" width="800">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
 <tr>
 <td>RateName</td>
 <td>Number of persons</td>
 <td>Price</td>
+<td>Comment</td>
 <td></td>
 </tr>
 <?php 
@@ -36,12 +17,32 @@ foreach($this->pageModel->getRoomRates() as $rateDTO) {
 <td><a href="<?php echo $this->url(array("controller"=>"room", "action"=>"editroomrate", "rid"=>$this->pageModel->room->id, "rateId"=>$rateDTO->id))?>"><?php echo $rateDTO->rateName?></a></td>
 <td><?php echo $rateDTO->personNumber?></td>
 <td><?php echo $rateDTO->price?></td>
-<td><a href="<?php echo $this->url(array("controller"=>"room", "action"=>"deleteroomrate", "rid"=>$this->pageModel->room->id, "rateId"=>$rateDTO->id))?>">Delete</a></td>
-</tr>
-<?php }?>
-<tr>
-<td colspan="3">
-<a href="<?php echo $this->url(array("controller"=>"room", "action"=>"addroomrate", "rid"=>$this->pageModel->room->id))?>"/>Add New</a>
+<td><?php echo $rateDTO->comment?></td>
+<td>
+<a href="<?php echo $this->url(array("controller"=>"room", "action"=>"deleteroomrate", "rateid"=>$rateDTO->id))?>"/>Delete</a>
 </td>
 </tr>
+<?php }?>
 </table>
+<hr></hr>
+<a href="<?php echo $this->url(array("controller"=>"room", "action"=>"addroomrate", "rid"=>$this->pageModel->room->id))?>"/>Add New Rate</a>
+<hr></hr>
+Available Discounts
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+<?php 
+$roomDiscountsDTO = $this->pageModel->getRoomDiscounts();
+foreach ($roomDiscountsDTO as $roomDiscountDTO) {
+?>
+<tr>
+<td>
+<a href="<?php echo $this->url(array("controller"=>"room", "action"=>"editroomdiscount", "rdid"=>$roomDiscountDTO->id))?>"><?php echo $roomDiscountDTO->roomDiscountRule->rule_name." - ".$roomDiscountDTO->discount."%<br/>";?></a>
+</td>
+<td>
+<a href="<?php echo $this->url(array("controller"=>"room", "action"=>"deleteroomdiscount", "rdid"=>$roomDiscountDTO->id))?>">Del</a>
+</td>
+</tr>
+<?php }?>
+</table>
+<hr></hr>
+<a href="<?php echo $this->url(array("controller"=>"room", "action"=>"addroomdiscount", "rid"=>$this->pageModel->room->id))?>"/>Add New Discount</a>
+

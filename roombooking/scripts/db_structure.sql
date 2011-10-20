@@ -1,5 +1,4 @@
 CREATE DATABASE  IF NOT EXISTS `booking` /*!40100 DEFAULT CHARACTER SET utf8 */;
-USE `booking`;
 -- MySQL dump 10.13  Distrib 5.1.40, for Win32 (ia32)
 --
 -- Host: localhost    Database: booking
@@ -360,7 +359,7 @@ ALTER TABLE `hotel`
     CHANGE COLUMN `chain` `chain` ENUM('None','Hilton','Elite','Sweden','First','Rica','Clarion','Nordic','Best Western','Other') NULL DEFAULT 'None' AFTER `city_part`;
     
     
-ALTER TABLE `booking`.`hotel` ADD COLUMN `contact_name` VARCHAR(100)  NOT NULL AFTER `website`,
+ALTER TABLE `hotel` ADD COLUMN `contact_name` VARCHAR(100)  NOT NULL AFTER `website`,
  ADD COLUMN `contact_title` VARCHAR(50)  AFTER `contact_name`,
  ADD COLUMN `contact_phone` VARCHAR(50)  NOT NULL AFTER `contact_title`,
  ADD COLUMN `contact_email` VARCHAR(50)  NOT NULL AFTER `contact_phone`,
@@ -368,7 +367,7 @@ ALTER TABLE `booking`.`hotel` ADD COLUMN `contact_name` VARCHAR(100)  NOT NULL A
  ADD COLUMN `modified` DATETIME  NOT NULL AFTER `created`;
  
  
-ALTER TABLE `booking`.`room` CHANGE COLUMN `type_id` `key` VARCHAR(3)  NOT NULL COMMENT 'room category key, 3 chars',
+ALTER TABLE `room` CHANGE COLUMN `type_id` `key` VARCHAR(3)  NOT NULL COMMENT 'room category key, 3 chars',
  CHANGE COLUMN `max_person` `max_adults` SMALLINT(6)  NOT NULL,
  ADD COLUMN `name` VARCHAR(50)  NOT NULL AFTER `id`,
  ADD COLUMN `max_children` SMALLINT(6)  NOT NULL DEFAULT 0 AFTER `max_adults`,
@@ -380,11 +379,11 @@ ALTER TABLE `booking`.`room` CHANGE COLUMN `type_id` `key` VARCHAR(3)  NOT NULL 
 DROP TABLE room_type;
 
 -- 2011-07-04
-ALTER TABLE `booking`.`booking` DROP FOREIGN KEY `booking_fk_constraint9` ;
-ALTER TABLE `booking`.`booking` CHANGE COLUMN `calendar_id` `calendar_price_id` INT(11) NULL DEFAULT NULL  , 
+ALTER TABLE `booking` DROP FOREIGN KEY `booking_fk_constraint9` ;
+ALTER TABLE `booking` CHANGE COLUMN `calendar_id` `calendar_price_id` INT(11) NULL DEFAULT NULL  , 
   ADD CONSTRAINT `booking_fk_constraint9`
   FOREIGN KEY (`calendar_price_id` )
-  REFERENCES `booking`.`calendar_price` (`id` )
+  REFERENCES `calendar_price` (`id` )
 , DROP INDEX `booking_fk_constraint9` 
 , ADD INDEX `booking_fk_constraint9` (`calendar_price_id` ASC) ;
 
@@ -392,7 +391,7 @@ ALTER TABLE `booking`.`booking` CHANGE COLUMN `calendar_id` `calendar_price_id` 
 
 -- 2011-07-19
 -- activity type
-CREATE TABLE  `booking`.`activity_type` (
+CREATE TABLE `activity_type` (
   `id` int(11) NOT NULL auto_increment,
   `key` varchar(20) NOT NULL,
   `name` varchar(40) NOT NULL,
@@ -404,7 +403,7 @@ CREATE TABLE  `booking`.`activity_type` (
 insert into activity_type (`key`, `name`, table_name) values ('SEND_BOOKING_REQUEST', 'Send booking request', 'booking');
 insert into activity_type (`key`, `name`, table_name) values ('RESPOND_BOOKING_REQUEST', 'Response booking request', 'booking');
 
-CREATE TABLE `booking`.`activity` (
+CREATE TABLE `activity` (
   `id` INTEGER  NOT NULL AUTO_INCREMENT,
   `type` INTEGER  NOT NULL,
   `user_id` INTEGER  NOT NULL,
@@ -424,7 +423,7 @@ ENGINE = InnoDB
 CHARACTER SET utf8 COLLATE utf8_general_ci
 COMMENT = 'user actities';
 
-CREATE TABLE  `booking`.`mail_queue` (
+CREATE TABLE  `mail_queue` (
   `id` int(11) NOT NULL auto_increment,
   `activity_type` int(11) NOT NULL,
   `subject` varchar(100) NOT NULL,
@@ -440,7 +439,7 @@ CREATE TABLE  `booking`.`mail_queue` (
 
 
 -- 2011-08-19
-CREATE  TABLE `booking`.`commission` (
+CREATE  TABLE `commission` (
   `id` INT(11) NOT NULL AUTO_INCREMENT ,
   `room_id` INT NOT NULL ,
   `commission` VARCHAR(10) NULL ,
@@ -450,7 +449,7 @@ CREATE  TABLE `booking`.`commission` (
   INDEX `commission_fk_constraint1` (`room_id` ASC) ,
   CONSTRAINT `commission_fk_constraint1`
     FOREIGN KEY (`room_id` )
-    REFERENCES `booking`.`room` (`id` )
+    REFERENCES `room` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -473,7 +472,7 @@ ALTER TABLE `rate` DROP FOREIGN KEY `rate_fk_constratint1` ;
 ALTER TABLE `rate` ADD COLUMN `discount` SMALLINT NULL DEFAULT NULL COMMENT 'discount in percentage'  AFTER `price` , ADD COLUMN `calendar_price_discount` INT NULL DEFAULT NULL COMMENT 'calendar price discount in percentage'  AFTER `discount` , ADD COLUMN `comment` TEXT NULL DEFAULT NULL  AFTER `calendar_price_discount` , 
   ADD CONSTRAINT `rate_fk_constratnt1`
   FOREIGN KEY (`rate_name` )
-  REFERENCES `booking`.`rate_name` (`id` )
+  REFERENCES `rate_name` (`id` )
   ON DELETE NO ACTION
   ON UPDATE NO ACTION, 
   ADD CONSTRAINT `rate_fk_constraint2`
@@ -484,3 +483,82 @@ ALTER TABLE `rate` ADD COLUMN `discount` SMALLINT NULL DEFAULT NULL COMMENT 'dis
 , DROP INDEX `rate_unique` 
 , ADD UNIQUE INDEX `rate_unique` (`room_id` ASC, `person_number` ASC, `rate_name` ASC, `discount` ASC, `calendar_price_discount` ASC) 
 , ADD INDEX `rate_fk_constraint2` (`calendar_price_discount` ASC) ;
+
+ALTER TABLE `rate` 
+DROP INDEX `rate_unique` 
+, ADD UNIQUE INDEX `rate_unique` (`room_id` ASC, `person_number` ASC, `rate_name` ASC) ;
+
+-- 2011-09-02
+ALTER TABLE `rate` ADD COLUMN `calendar_id` INT NULL DEFAULT NULL  AFTER `discount`;
+ALTER TABLE `rate` DROP FOREIGN KEY `rate_fk_constraint2` ;
+ALTER TABLE `rate` 
+DROP INDEX `rate_fk_constraint2` ;
+
+ALTER TABLE `rate` 
+  ADD CONSTRAINT `rate_fk_constraint2`
+  FOREIGN KEY (`calendar_id` )
+  REFERENCES `calendar` (`id` )
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION
+, ADD INDEX `rate_fk_constraint2` (`calendar_id` ASC) ;
+
+drop table `calendar_price_discount`;
+
+CREATE  TABLE `room_discount_rule` (
+  `id` INT NOT NULL AUTO_INCREMENT ,
+  `key` VARCHAR(20) NOT NULL ,
+  `rule_name` VARCHAR(45) NOT NULL ,
+  `description` VARCHAR(100) NULL DEFAULT NULL,
+  `created` DATETIME NULL ,
+  PRIMARY KEY (`id`) ,
+  UNIQUE INDEX `room_discount_rule_unique` (`key` ASC) )
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_general_ci;
+
+CREATE  TABLE `room_discount` (
+  `id` INT NOT NULL AUTO_INCREMENT ,
+  `rule_id` INT NOT NULL ,
+  `discount` SMALLINT NOT NULL DEFAULT 0 ,
+  `created` DATETIME NULL ,
+  `modified` DATETIME NULL ,
+  PRIMARY KEY (`id`) ,
+  INDEX `room_discount_fk_constraint1` (`rule_id` ASC) ,
+  UNIQUE INDEX `room_discount_unique` (`rule_id` ASC, `discount` ASC) ,
+  CONSTRAINT `room_discount_fk_constraint1`
+    FOREIGN KEY (`rule_id` )
+    REFERENCES `room_discount_rule` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_general_ci
+COMMENT = 'room discount' ;
+
+ALTER TABLE `rate` DROP FOREIGN KEY `rate_fk_constraint2` ;
+ALTER TABLE `rate` DROP COLUMN `calendar_price_discount` , DROP COLUMN `calendar_id` , DROP COLUMN `discount` 
+, DROP INDEX `rate_fk_constraint2` ;
+
+ALTER TABLE `room_discount` ADD COLUMN `room_id` INT NOT NULL  AFTER `id` , 
+  ADD CONSTRAINT `room_discount_fk_constraint2`
+  FOREIGN KEY (`room_id` )
+  REFERENCES `room` (`id` )
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION
+, DROP INDEX `room_discount_unique` 
+, ADD UNIQUE INDEX `room_discount_unique` (`rule_id` ASC, `room_id` ASC) 
+, ADD INDEX `room_discount_fk_constraint2` (`room_id` ASC) ;
+
+
+ALTER TABLE `booking` DROP FOREIGN KEY `booking_fk_constraint9` , DROP FOREIGN KEY `booking_fk_constraint8` ;
+ALTER TABLE `booking` DROP COLUMN `discount` , CHANGE COLUMN `status` `status` ENUM('pending','accepted','rejected','expired','delived','confirmed') NOT NULL DEFAULT 'pending'  , CHANGE COLUMN `rate_id` `price` DOUBLE NOT NULL COMMENT 'mandatory field'  , CHANGE COLUMN `calendar_price_id` `discount` INT(11) NULL DEFAULT NULL  , CHANGE COLUMN `commission` `commission` INT NULL DEFAULT NULL  
+, DROP INDEX `booking_fk_constraint8` 
+, ADD INDEX `booking_fk_constraint8` (`price` ASC) 
+, DROP INDEX `booking_fk_constraint9` 
+, ADD INDEX `booking_fk_constraint9` (`discount` ASC) 
+, DROP INDEX `booking_fk_constraint10` ;
+
+ALTER TABLE `booking` CHANGE COLUMN `discount` `discount` DOUBLE NULL DEFAULT NULL  , CHANGE COLUMN `commission` `commission` DOUBLE NULL DEFAULT NULL  ;
+
+ALTER TABLE `booking` CHANGE COLUMN `status` `status` ENUM('pending','accepted','rejected','expired','delivered','confirmed','cancelled') NOT NULL DEFAULT 'pending'  ;
+

@@ -3,9 +3,9 @@ class RoomController extends Zend_Controller_Action {
 	
 	private $hotel;
 	private $room;
-	private $discount;
+	private $roomDiscount;
 	private $commission;
-	private $calendarPrice;
+	private $calendarPriceDiscount;
 	private $rate;
 	private $customer;
 	private $booking;
@@ -13,9 +13,9 @@ class RoomController extends Zend_Controller_Action {
 	public function init() {
 		$this->hotel = new Hotel();
 		$this->room = new Room();
-		$this->discount = new Discount();
+		$this->roomDiscount = new RoomDiscount();
 		$this->commission = new Commission();
-		$this->calendarPrice = new CalendarPrice();
+		$this->calendarPriceDiscount = new CalendarPriceDiscount();
 		$this->rate = new Rate();
 		$this->customer = new Customer();
 		$this->booking = new Booking();
@@ -45,7 +45,7 @@ class RoomController extends Zend_Controller_Action {
 	                	  Room::NAME => trim($form->getValue(Room::NAME)),
 	                	  Room::KEY => strtoupper(trim($form->getValue("key"))),
 	                	  Room::HOTEL => $form->getValue("hotel_id"),
-	                	  Room::TOTAL => $form->getValue("available"),
+	                	  Room::TOTAL => $form->getValue("total"),
 	                	  Room::MAX_ADULTS => $form->getValue(Room::MAX_ADULTS),
 	                	  Room::MAX_CHILDREN => $form->getValue(Room::MAX_CHILDREN),
 	                	  Room::AVAILABLE => $form->getValue("available"),
@@ -71,17 +71,19 @@ class RoomController extends Zend_Controller_Action {
 	 * Edit room action.
 	 */
 	public function editAction() {
-	   if ($this->_helper->user->isLoggedIn()) {
+	    if ($this->_helper->user->isLoggedIn()) {
             $userProfile = $this->_helper->user->getUserProfile();
 			$user = $userProfile->loggedInUser;
 			$hotel = $userProfile->loggedInHotel;
             if (!empty($hotel)) {
                 
+                $roomId = $this->_getParam("rid");
+                $room = $this->room->findById($roomId);
                 $pageModel = new ViewPageModel();
                 $pageModel->hotel = $hotel;
                 $pageModel->loggedInUser = $user;
-                $roomId = $this->_getParam("rid");
-                $room = $this->room->findById($roomId);
+                $pageModel->selectedRoom = $room;
+                
                 $form = new EditHotelRoomFormSimple($hotel, $room);
                 $this->view->form = $form;
                 $this->view->pageModel = $pageModel;
@@ -101,12 +103,23 @@ class RoomController extends Zend_Controller_Action {
                         // add discount if any.
                         $discount = $form->getValue("discount");
                         if ($discount != 0) {
-                        	$this->discount->addOrUpdateDiscount($room->id, $discount, $currentTime, $currentTime);
+                        	$data = array(
+                        		RoomDiscount::ROOM => $form->getValue(RoomDiscount::ROOM),
+                        		RoomDiscount::RULE => $form->getValue(RoomDiscount::RULE),
+                        		RoomDiscount::DISCOUNT => $form->getValue(RoomDiscount::DISCOUNT),
+                        		RoomDiscount::CREATED => $this->_helper->generator->generateCurrentTime(),
+                        		RoomDiscount::CREATED => $this->_helper->generator->generateCurrentTime()
+                        	);
+                        	$this->roomDiscount->addNew($data);
+                        } else {
+                        	$this->roomDiscount->deleteByRoomAndRule($form->getValue(RoomDiscount::ROOM), $form->getValue(RoomDiscount::RULE));
                         }
                     	// add commission if any.
                         $commission = $form->getValue("commission");
                         if ($commission != 0) {
                         	$this->commission->addOrUpdateCommission($room->id, $commission, $currentTime, $currentTime);
+                        } else {
+                        	$this->commission->deleteByRoom($form->getValue(RoomDiscount::ROOM));
                         }
                         $db->commit();
                         $this->_redirect("/index/formsucceed");
@@ -166,15 +179,15 @@ class RoomController extends Zend_Controller_Action {
                         $db = Zend_Registry::get("db");
                         $db->beginTransaction();
                         $data = array(
-                            CalendarPrice::CALENDAR => $form->getValue(CalendarPrice::CALENDAR),
-                            CalendarPrice::ROOM => $form->getValue(CalendarPrice::ROOM),
-                            CalendarPrice::PRICE => $form->getValue(CalendarPrice::PRICE),
-                            CalendarPrice::CREATED => $this->_helper->generator->generateCurrentTime(),
-                            CalendarPrice::MODIFIED => $this->_helper->generator->generateCurrentTime(),
+                            CalendarPriceDiscount::CALENDAR => $form->getValue(CalendarPriceDiscount::CALENDAR),
+                            CalendarPriceDiscount::ROOM => $form->getValue(CalendarPriceDiscount::ROOM),
+                            CalendarPriceDiscount::PRICE => $form->getValue(CalendarPriceDiscount::PRICE),
+                            CalendarPriceDiscount::CREATED => $this->_helper->generator->generateCurrentTime(),
+                            CalendarPriceDiscount::MODIFIED => $this->_helper->generator->generateCurrentTime(),
                         );
-                        $this->calendarPrice->addCalendarPrice($data);
+                        $this->calendarPriceDiscount->addCalendarPrice($data);
                         $db->commit();
-                        $this->_redirect("/room/roomprice/rid/".$form->getValue(CalendarPrice::ROOM));
+                        $this->_redirect("/room/roomprice/rid/".$form->getValue(CalendarPriceDiscount::ROOM));
                     }
             	}
             } else {
@@ -194,8 +207,11 @@ class RoomController extends Zend_Controller_Action {
 			$roomId = $this->_getParam("rid");
             $room = $this->room->findById($roomId);
             if (isset($room)) {
-            	$form = new AddRoomRateForm($room);
-            	$this->view->room = $room;
+            	$form = new AddOrUpdateRoomRateForm($room);
+            	$pageModel = new RoomViewPageModel();
+            	$pageModel->loggedInUser = $user;
+            	$pageModel->room = $room;
+            	$this->view->pageModel = $pageModel;
             	$this->view->form = $form;
             	if ($this->getRequest ()->isPost ()) {
                     if ($form->isValid ( $_POST )) {
@@ -203,11 +219,27 @@ class RoomController extends Zend_Controller_Action {
                     	
                     	$db = Zend_Registry::get("db");
                     	$db->beginTransaction();
+                    	$calendarPriceDiscountId = null;
+//                    	$calendarId = $form->getValue(CalendarPriceDiscount::CALENDAR);
+//                    	if (!empty($calendarId)) {
+//	                    	$data = array(
+//	                    		CalendarPriceDiscount::ROOM => $roomId,
+//	                    		CalendarPriceDiscount::CALENDAR => $calendarId,
+//	                    		CalendarPriceDiscount::DISCOUNT => $form->getvalue("calendar_price_discount"),
+//	                    		CalendarPriceDiscount::CREATED => $this->_helper->generator->generateCurrentTime(),
+//                    	   		CalendarPriceDiscount::MODIFIED => $this->_helper->generator->generateCurrentTime()
+//	                    	);
+//	                    	$calendarPriceDiscountId = $this->calendarPriceDiscount->addCalendarPrice($data);
+//                    	}
+//                    	
                     	$data = array(
                     	   Rate::ROOM => $roomId,
                     	   Rate::PERSON_NUMBER => $form->getValue(Rate::PERSON_NUMBER),
                     	   Rate::RATE => $form->getValue(Rate::RATE),
                     	   Rate::PRICE => $form->getValue(Rate::PRICE),
+//                    	   Rate::DISCOUNT => $form->getValue(Rate::DISCOUNT),
+//                    	   Rate::CALENDAR_PRICE_DISCOUNT => $calendarPriceDiscountId,
+                    	   Rate::COMMENT => $form->getValue(Rate::COMMENT),
                     	   Rate::CREATED => $this->_helper->generator->generateCurrentTime(),
                     	   Rate::MODIFIED => $this->_helper->generator->generateCurrentTime()
                     	);
@@ -236,7 +268,7 @@ class RoomController extends Zend_Controller_Action {
             $room = $this->room->findById($roomId);
             $rate = $this->rate->findById($rateId);
             if (isset($room)) {
-            	$form = new EditRoomRateForm($room, $rate);
+            	$form = new AddOrUpdateRoomRateForm($room, $rate);
             	$this->view->form = $form;
             	if ($this->getRequest ()->isPost ()) {
                     if ($form->isValid ( $_POST )) {
@@ -247,6 +279,10 @@ class RoomController extends Zend_Controller_Action {
                     		Rate::ROOM => $roomId,
                     		Rate::PERSON_NUMBER => $form->getValue(Rate::PERSON_NUMBER),
                     		Rate::PRICE => $form->getValue(Rate::PRICE),
+//                    		Rate::DISCOUNT => $form->getValue(Rate::DISCOUNT),
+//                    		Rate::Calenda => $form->getValue(Rate::CALENDAR),
+//                    		Rate::CALENDAR_PRICE_DISCOUNT => $form->getValue(Rate::CALENDAR_PRICE_DISCOUNT),
+                    		Rate::COMMENT => $form->getValue(Rate::COMMENT),
                     		Rate::MODIFIED => $this->_helper->generator->generateCurrentTime()
                     	);
                     	$this->rate->updateRate($data);
@@ -266,7 +302,7 @@ class RoomController extends Zend_Controller_Action {
 	 */
 	public function deleteroomrateAction() {
 		if ($this->_helper->user->isLoggedIn()) {
-			$roomId = $this->_getParam("rId");
+			$roomId = $this->_getParam("roomId");
 			$rateId = $this->_getParam("rateId");
 			$this->rate->deleteById($rateId);
 			$this->_redirect("/room/roomprice/rid/".$roomId);
@@ -299,20 +335,33 @@ class RoomController extends Zend_Controller_Action {
                 if ($this->getRequest ()->isPost ()) {
                     if ($form->isValid ( $_POST )) {
                         $cityPart = $form->getValue(Hotel::CITY_PART);
-                        $hotelId = $form->getValue("hotel_id");
-                        $roomId = $form->getValue("room_id");
+//                        $hotelId = $form->getValue("hotel_id");
+//                        $roomId = $form->getValue("room_id");
+						$maxAdults = $form->getValue(Room::MAX_ADULTS);
+						$maxChildren = $form->getValue(Room::MAX_CHILDREN);
+						$maxPrice = $form->getValue(Rate::PRICE);
                         
-                        $rooms = Room::getRoomsBySearchCriteria($cityPart, $hotelId, $roomId, $hotel);
-                        $roomsDTO = array();
-                        foreach ($rooms as $room) {
-                        	$roomDTO = new RoomDTO();
-                        	$roomDTO->id = $room->rid;
-                        	$roomDTO->name = $room->name;
-                        	$roomDTO->key = $room->key;
-                        	$roomDTO->description = $room->description;
-                        	$roomsDTO[$room->rid] = $roomDTO;
+						$criteria = array(
+							Hotel::CITY_PART => $cityPart,
+							Rate::PRICE => empty($maxPrice) ? null : $maxPrice,
+							Room::MAX_ADULTS => empty($maxAdults) ? null : $maxAdults,
+							Room::MAX_CHILDREN => empty($maxChildren) ? null : $maxChildren,
+							"excludedHotels" => array($hotel->id)
+						);
+                        $results = Room::getRoomsBySearchCriteria($criteria);
+                        
+                        $searchResults = array();
+                        $index = 1;
+                        foreach ($results as $result) {
+                        	$searchResult = new SearchResultDTO();
+                        	$room = $this->room->findById($result->roomId);
+                        	$searchResult->id = $index;
+                        	$searchResult->room = $room;
+                        	$searchResult->rate = $this->rate->findById($result->rateId);
+                        	$searchResult->roomDiscounts = Room::getRoomDiscounts($room);
+                        	$searchResults[$index++] = $searchResult;
                         }
-                        $this->view->rooms = $roomsDTO;
+                        $this->view->searchResults = $searchResults;
                     }
                 }
             } else {
@@ -329,13 +378,18 @@ class RoomController extends Zend_Controller_Action {
 	 */
 	public function sendrequestAction() {
 		if ($this->_helper->user->isLoggedIn()) {
-            $userProfile = $this->_helper->user->getUserProfile;
+            $userProfile = $this->_helper->user->getUserProfile();
             $user = $userProfile->loggedInUser;
             $hotel = $userProfile->loggedInHotel;
-            
-            $roomIds = $this->_getParam("chk");
-            if (isset($roomIds)) {
-            	$form = new SendRequestForm($user, $hotel, $roomIds);
+            $indexes = $this->_getParam("chk");
+            if (isset($indexes)) {
+            	foreach($indexes as $key => $index) {
+            		$roomIds[$key] = $this->_getParam("roomId".$index);
+            		$prices[$key] = $this->_getParam("price".$index);
+            		$discounts[$key] = $this->_getParam("discount".$index);
+            	}
+            	$form = new SendRequestForm($user, $hotel, $roomIds, $prices, $discounts);
+            	
             	$this->view->form = $form;            	
             } else {
             	throw new Zend_Exception("No room has been chosen!");
@@ -352,11 +406,11 @@ class RoomController extends Zend_Controller_Action {
 	public function submitbookingrequestAction() {
 		if ($this->_helper->user->isLoggedIn()) {
             $user = $this->_helper->user->getUserData();
-            
-            print_r($_POST);
-//            exit;
             $roomIds = $this->_getParam("roomIds");
-            foreach ($roomIds as $roomId) {
+            foreach ($roomIds as $key => $roomId) {
+            	$index = substr($key, 6, strlen($key));
+            	$prices = $this->_getParam("prices");
+            	$discounts = $this->_getParam("discounts");
             	$db = Zend_Registry::get("db");
                 $db->beginTransaction();
                 $data = array(
@@ -367,12 +421,10 @@ class RoomController extends Zend_Controller_Action {
                 );
 				$customerId = $this->customer->addCustomer($data);
 						
-                $roomIdsArr = $this->_getParam("roomIds");
-                foreach ($roomIdsArr as $roomId) {
+//                $roomIdsArr = $this->_getParam("roomIds");
+//                foreach ($roomIdsArr as $key => $roomId) {
                 	$room = $this->room->findById($roomId);
                 	$fromHotel = Room::getHotel($room);
-                	$rate = $this->rate->findBestRate($room->id, $this->_getParam(Booking::NUMBER_OF_PERSON));
-                	$calendarPrices = Room::getCalendarPrices($room);
                 	$data = array(
                 		Booking::ROOM_ID => $roomId,
                 		Booking::CUSTOMER => $customerId,
@@ -385,18 +437,81 @@ class RoomController extends Zend_Controller_Action {
                 		Booking::NUMBER_OF_ROOM => $this->_getParam(Booking::NUMBER_OF_ROOM),
                 		Booking::STATUS => BookingStatus::PENDING,
                 		Booking::ARRIVAL_TIME => $this->_getParam(Booking::ARRIVAL_TIME),
-                		Booking::RATE => isset($rate) ? $rate->id : null,
-                		Booking::CALENDAR => isset($calendarPrices) ? $calendarPrices->current()->id : null,
-                		Booking::DISCOUNT => Room::getDiscount($room),
+                		Booking::PRICE => $prices["price".$index],
+                		Booking::DISCOUNT => $discounts["discount".$index],
                 		Booking::COMMISSION => Room::getCommission($room),
                     	Booking::CREATED => $this->_helper->generator->generateCurrentTime(), 
                     );
-                }
+//                }
 				$this->booking->addEntry($data);
                 $db->commit();
             }
-            $this->_redirect("/");
+            $this->_redirect("/index/formsucceed");
         } else {
+            $this->_redirect( "/user/login?next=".urlencode($this->_helper->generator->getCurrentURI()) );
+        }
+	}
+	
+	/**
+	 * Edit room discount action.
+	 */
+	public function editroomdiscountAction() {
+		if ($this->_helper->user->isLoggedIn()) {
+            $user = $this->_helper->user->getUserData();
+            $roomDiscountId = $this->_getParam("rdid");
+            $roomDiscount = $this->roomDiscount->find($roomDiscountId)->current();
+            $form = new EditRoomDiscount($roomDiscount);
+            $this->view->form = $form;
+            if ($this->getRequest ()->isPost ()) {
+            	if ($form->isValid ( $_POST )) {
+            		$data = array(
+            			RoomDiscount::ID => $form->getValue(RoomDiscount::ID),
+            			RoomDiscount::DISCOUNT => $form->getValue(RoomDiscount::DISCOUNT)
+            		);
+               		$this->roomDiscount->updateRoomDiscount($data);
+               		$this->_redirect("/room/roomprice/rid/".$form->getValue(RoomDiscount::ROOM));
+            	}
+            }
+		} else {
+            $this->_redirect( "/user/login?next=".urlencode($this->_helper->generator->getCurrentURI()) );
+        }
+	}
+	
+	/**
+	 * Delete room discount action.
+	 */
+	public function deleteroomdiscountAction() {
+		if ($this->_helper->user->isLoggedIn()) {
+			$roomDiscountId = $this->_getParam("rdid");
+			$this->roomDiscount->deleteById($roomDiscountId);            
+		} else {
+            $this->_redirect( "/user/login?next=".urlencode($this->_helper->generator->getCurrentURI()) );
+        }
+	}
+	
+	/**
+	 * Add new room discount action.
+	 */
+	public function addroomdiscountAction() {
+		if ($this->_helper->user->isLoggedIn()) {
+			$roomId = $this->_getParam("rid");
+			$room = $this->room->findById($roomId);
+			$form = new AddRoomDiscount($room);
+			$this->view->form = $form;
+			if ($this->getRequest ()->isPost ()) {
+            	if ($form->isValid ( $_POST )) {
+            		$data = array(
+            			RoomDiscount::ROOM => $form->getValue(RoomDiscount::ROOM),
+            			RoomDiscount::RULE => $form->getValue(RoomDiscount::RULE),
+            			RoomDiscount::DISCOUNT => $form->getValue(RoomDiscount::DISCOUNT),
+            			RoomDiscount::CREATED => $this->_helper->generator->generateCurrentTime(),
+            			RoomDiscount::MODIFIED => $this->_helper->generator->generateCurrentTime()
+            		);
+            		$this->roomDiscount->addNew($data);
+            		$this->_redirect("/room/roomprice/rid/".$form->getValue(RoomDiscount::ROOM));
+            	}
+			}
+		} else {
             $this->_redirect( "/user/login?next=".urlencode($this->_helper->generator->getCurrentURI()) );
         }
 	}

@@ -15,7 +15,7 @@ class EditHotelRoomFormSimple extends Zend_Form {
 		$this->setMethod("POST");
 		$this->setName("EditHotelRoomFormSimple");
 		
-		$element = new Zend_Form_Element_Hidden("room_id");
+		$element = new Zend_Form_Element_Hidden(RoomDiscount::ROOM);
 		$element->setValue($this->room->id);
 		$this->addElement($element);
 		
@@ -25,7 +25,11 @@ class EditHotelRoomFormSimple extends Zend_Form {
 		$element->setValue($this->room->available);
 		$this->addElement($element);
 		
-		$element = new Zend_Form_Element_Text("discount");
+		$element = new Zend_Form_Element_Hidden(RoomDiscount::RULE);
+		$element->setValue(RoomDiscountRule::UNKNOWN);
+		$this->addElement($element);
+		
+		$element = new Zend_Form_Element_Text(RoomDiscount::DISCOUNT);
 		$element->setLabel("Discount");
 		$element->setValue(Room::getDiscount($this->room));
 		$this->addElement($element);

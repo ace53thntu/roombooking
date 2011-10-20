@@ -3,6 +3,8 @@
 class SendRequestForm extends Zend_Form {
 	
 	private $selectedRoomIds;
+	private $prices;
+	private $discounts;
 	private $fromUser;
 	private $fromHotel;
 	
@@ -11,9 +13,13 @@ class SendRequestForm extends Zend_Form {
 	 * @param $fromUser
 	 * @param $fromHotel
 	 * @param $selectedRoomIds
+	 * @param $prices
+	 * @param $discounts
 	 */
-	public function SendRequestForm($fromUser, $fromHotel, $selectedRoomIds) {
+	public function SendRequestForm($fromUser, $fromHotel, $selectedRoomIds, $prices, $discounts) {
 		$this->selectedRoomIds = $selectedRoomIds;
+		$this->prices = $prices;
+		$this->discounts = $discounts;
 		$this->fromUser = $fromUser;
 		$this->fromHotel = $fromHotel;
 		$this->__construct();
@@ -24,10 +30,10 @@ class SendRequestForm extends Zend_Form {
 		$this->setAction("submitbookingrequest");
 		$this->setName("SendRequestForm");
 		
-		foreach ($this->selectedRoomIds as $selectedRoomId) {
+		foreach ($this->selectedRoomIds as $key => $selectedRoomId) {
 			if (isset($selectedRoomId)) {
-				$defArr["roomId".$selectedRoomId] = "hidden";
-				$valArr["roomId".$selectedRoomId] = $selectedRoomId;
+				$defArr["roomId".$key] = "hidden";
+				$valArr["roomId".$key] = $selectedRoomId;
 			}
 		}
 		$element = new Zend_Form_SubForm("foo");
@@ -36,13 +42,35 @@ class SendRequestForm extends Zend_Form {
 		$element->populate($valArr);
 		$this->addSubForm($element, "foo");
 
+		$defArr=array();
+		$valArr=array();
+		foreach ($this->prices as $key => $price) {
+			$defArr["price".$key] = "hidden";
+			$valArr["price".$key] = $price;
+		}
+		$element = new Zend_Form_SubForm("foo1");
+		$element->setElementsBelongTo("prices")
+		->setElements($defArr);
+		$element->populate($valArr);
+		$this->addSubForm($element, "foo1");
+		
+		$defArr=array();
+		$valArr=array();
+		foreach ($this->discounts as $key => $discount) {
+			$defArr["discount".$key] = "hidden";
+			$valArr["discount".$key] = $discount;
+		}
+		$element = new Zend_Form_SubForm("foo2");
+		$element->setElementsBelongTo("discounts")
+		->setElements($defArr);
+		$element->populate($valArr);
+		$this->addSubForm($element, "foo2");
 		
 		$element = new Zend_Form_Element_Hidden(Booking::FROM_USER);
 		$element->setValue($this->fromUser->id);
 		$this->addElement($element);
-		
 		$element = new Zend_Form_Element_Hidden(Booking::FROM_HOTEL);
-		$element->setValue($fromHotel->id);
+		$element->setValue($this->fromHotel->id);
 		$this->addElement($element);
 		
 		$element = new Zend_Form_Element_Text(Booking::FROM_DATE);

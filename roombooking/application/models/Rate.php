@@ -6,6 +6,7 @@ class Rate extends Zend_Db_Table_Abstract {
 	const RATE = "rate_name";
 	const PERSON_NUMBER = "person_number";
 	const PRICE = "price";
+	const COMMENT = "comment";
 	const CREATED = "created";
 	const MODIFIED = "modified";
 	
@@ -61,7 +62,9 @@ class Rate extends Zend_Db_Table_Abstract {
     	$rate = $this->findById($data[self::ID]);
     	if (isset($data)) {
     		$rate->person_number = $data[self::PERSON_NUMBER];
+//    		$rate->discount = $data[self::DISCOUNT];
     		$rate->price = $data[self::PRICE];
+    		$rate->comment = $data[self::COMMENT];
     		$rate->modified = $data[self::MODIFIED];
     		$rate->save();
     	}
@@ -85,10 +88,13 @@ class Rate extends Zend_Db_Table_Abstract {
      * @param $rateName
      * @param $roomId
      * @param $personNumber
+     * 
      * @return rate object
      */
     public function findByUnique($rateName, $roomId, $personNumber) {
-    	$where = $this->select()->where("rate_name=?", $rateName)->where("room_id=?", $roomId)->where("person_number=?", $personNumber);
+    	$where = $this->select()->where("rate_name=?", $rateName)
+    	->where("room_id=?", $roomId)
+    	->where("person_number=?", $personNumber);
     	return $this->fetchRow($where);
     }
     
@@ -97,6 +103,7 @@ class Rate extends Zend_Db_Table_Abstract {
      * 
      * @param $roomId
      * @param $numberOfPerson
+     * @deprecated
      */
     public function findBestRate($roomId, $numberOfPerson) {
     	$where = $this->select()->where("room_id=?", $roomId)->where("person_number>=?", $numberOfPerson)->order("price ASC");
@@ -117,5 +124,15 @@ class Rate extends Zend_Db_Table_Abstract {
     public static function getRateName($rate) {
     	return $rate->findParentRow("RateName", "RateName");
     }
+    
+//    /**
+//     * Get calendar special discount, if any.
+//     * 
+//     * @param $rate
+//     * @return calendar price discount object
+//     */
+//    public static function getCalendarPriceDiscount($rate) {
+//    	return $rate->findParentRow("CalendarPriceDiscount", "CalendarPriceDiscount");
+//    }
 }
 ?>

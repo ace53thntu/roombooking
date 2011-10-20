@@ -13,13 +13,15 @@ class Booking extends Zend_Db_Table_Abstract {
 	const NUMBER_OF_ROOM = "number_of_room";
 	const NUMBER_OF_PERSON = "number_of_person";
 	const STATUS = "status";
-	const RATE = "rate_id";
-	const CALENDAR = "calendar_price_id";
+	const PRICE = "price";
 	const DISCOUNT = "discount";
 	const COMMISSION = "commission";
 	const ARRIVAL_TIME = "arrival_time";
 	const EXPIRED_DATE = "expired_date";
 	const CREATED = "created";
+	
+	protected $_primary = "id";
+	protected $_name = "booking";
 	
 	protected $_referenceMap = array(
 		'FromHotel' => array(
@@ -85,6 +87,15 @@ class Booking extends Zend_Db_Table_Abstract {
 			$booking->status = $data[Booking::STATUS];
 			$booking->save();
 		}
+	}
+	
+	/**
+	 * Get room of booking.
+	 * 
+	 * @param $booking
+	 */
+	public static function getRoom($booking) {
+		return $booking->findParentRow("Room");
 	}
 }
 ?>
