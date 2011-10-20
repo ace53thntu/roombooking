@@ -5,6 +5,10 @@ class RoomDTO {
 	public $key;
 	public $name;
 	public $description;
+	public $maxAdults;
+	public $maxChildren;
+	public $totalRooms;
+	public $availableRoom;
 	
 	/**
 	 * Return calendar prices of given room, if any.

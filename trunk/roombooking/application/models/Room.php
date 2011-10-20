@@ -15,11 +15,10 @@ class Room extends Zend_Db_Table_Abstract {
 	protected $_name = "room";
 	
 	protected $_dependentTables = array(
-       'Discount',
 	   'Commission',
-	   'CalendarPrice',
 	   'Rate',
-	   'Booking'
+	   'Booking',
+	   'RoomDiscount'
     );
 	
 	protected $_referenceMap = array (
@@ -119,30 +118,51 @@ class Room extends Zend_Db_Table_Abstract {
      * @param $cityPart
      * @param $hotelId
      * @param $roomId
-     * @param $excludeHotel exclude hotel object
      * @return return rooms
      */
-    public static function getRoomsBySearchCriteria($cityPart, $hotelId, $roomId, $excludeHotel=null) {
+    public static function getRoomsBySearchCriteria($searchCriteria) {
     	$ret = array();
     	$table = new Room();
-    	if (!empty($roomId) && $roomId != 0) {
-    		$ret[0] = $table->findById($roomId);
-    	} else if (!empty($hotelId) && $hotelId != 0) {
-    		$table = new Hotel();
-    		$hotel = $table->findById($hotelId);
-    		$ret = Hotel::getRooms($hotel);
-    	} else {
-    		$excludeHotelsStr = "";
-    		if (isset($excludeHotel)) {
-    			$excludeHotelsStr = array(
-    				$excludeHotel->id => $excludeHotel->id
-    			);
-    		}
-    		$rooms = Room::getRoomsByCityPart($cityPart, $excludeHotelsStr);
-    		foreach ($rooms as $room) {
-    			$ret[$room->rid] = $room;
-    		}
-    	}
+    	$select = $table->select(Zend_Db_Table::SELECT_WITH_FROM_PART)
+        ->setIntegrityCheck(false)
+        ->from(array("r"=>"room"), array("roomId"=>"r.id", "rateId"=>"rate.id", "price"=>"rate.price", "adults"=>"r.max_adults", "children"=>"r.max_children"))
+        ->join(array("h"=>"hotel"), "r.hotel_id=h.id")
+        ->joinLeft(array("rate"=>"rate"), "r.id=rate.room_id");
+        if (!empty($searchCriteria[Hotel::CITY_PART])) {
+        	$select = $select->where("h.city_part=?", $searchCriteria[Hotel::CITY_PART]);
+        }
+        if (!empty($searchCriteria["excludedHotels"])) {
+	        $select = $select->where("h.id NOT IN (?)", $searchCriteria["excludedHotels"]);
+        }
+        if (!empty($searchCriteria[Room::MAX_ADULTS])) {
+       		$select = $select->where("r.max_adults >= ?", $searchCriteria[Room::MAX_ADULTS]);
+        }
+        if (!empty($searchCriteria[Room::MAX_CHILDREN])) {
+        	$select = $select->where("r.max_children >= ?", $searchCriteria[Room::MAX_CHILDREN]);
+        }
+        $select = $select->group(array("roomId", "rateId", "price"));
+        $select = $select->order("rate.price")->order("r.max_adults DESC")->order("r.max_children DESC");
+        return $table->fetchAll($select);
+        
+//    	$table = new Room();
+//    	if (!empty($roomId) && $roomId != 0) {
+//    		$ret[0] = $table->findById($roomId);
+//    	} else if (!empty($hotelId) && $hotelId != 0) {
+//    		$table = new Hotel();
+//    		$hotel = $table->findById($hotelId);
+//    		$ret = Hotel::getRooms($hotel);
+//    	} else {
+//    		$excludeHotelsStr = "";
+//    		if (isset($excludeHotel)) {
+//    			$excludeHotelsStr = array(
+//    				$excludeHotel->id => $excludeHotel->id
+//    			);
+//    		}
+//    		$rooms = Room::getRoomsByCityPart($cityPart, $excludeHotelsStr);
+//    		foreach ($rooms as $room) {
+//    			$ret[$room->rid] = $room;
+//    		}
+//    	}
     	return $ret;
     }
     
@@ -150,8 +170,13 @@ class Room extends Zend_Db_Table_Abstract {
      * Get room's discount.
      * @param $room
      */
-    public static function getDiscount($room) {
-    	$discounts = $room->findDependentRowset("Discount", "Room");
+    public static function getDiscount($room, $rules=null) {
+    	if (empty($rules)) {
+    		$discounts = $room->findDependentRowset("RoomDiscount", "Room");
+    	} else {
+    		$table = new RoomDiscount();
+    		$discounts = $room->findDependentRowset("RoomDiscount", "Room", $table->select()->where("rule_id IN (?)", $rules));
+    	}
     	if (count($discounts) > 0) {
     		return $discounts->current()->discount;
     	} else {
@@ -183,13 +208,27 @@ class Room extends Zend_Db_Table_Abstract {
     }
     
     /**
-     * Return calendar price of given room.
+     * Return calendar price discounts of given room.
      * 
      * @param $room
-     * @return return calendar prices
+     * @return return calendar price discounts
      */
-    public static function getCalendarPrices($room) {
-    	return $room->findDependentRowset("CalendarPrice", "Room");
+    public static function getCalendarPriceDiscounts($room) {
+    	return $room->findDependentRowset("CalendarPriceDiscount", "Room");
+    }
+    
+    /**
+     * Return calendar price discounts as an array, to present in the select box component.
+     * 
+     * @param $room
+     */
+    public static function getCalendarPriceDiscountsAsArray($room) {
+    	$calendarPriceDiscounts = $room->findDependentRowset("CalendarPriceDiscount", "Room");
+    	$arr = array();
+    	foreach ($calendarPriceDiscounts as $calendarPriceDiscount) {
+    		$arr[$calendarPriceDiscount->id] = CalendarPriceDiscount::getCalendar($calendarPriceDiscount)->name." - ".$calendarPriceDiscount->discount;
+    	}
+    	return $arr;
     }
     
     /**
@@ -215,6 +254,15 @@ class Room extends Zend_Db_Table_Abstract {
     	} else {
     		return null;
     	}
+    }
+    
+    /**
+     * Get room discount data.
+     * 
+     * @param $room
+     */
+    public static function getRoomDiscounts($room) {
+    	return $room->findDependentRowset("RoomDiscount", "Room");
     }
 }
 ?>

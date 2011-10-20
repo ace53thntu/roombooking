@@ -1,3 +1,5 @@
 <?php 
 echo $this->form;
 ?>
+<hr></hr>
+<a href="<?php echo $this->url(array("controller"=>"room", "action"=>"roomprice", "rid"=>$this->pageModel->selectedRoom->id))?>">Edit price</a>

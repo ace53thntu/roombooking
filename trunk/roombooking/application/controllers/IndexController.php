@@ -19,6 +19,12 @@ class IndexController extends Zend_Controller_Action {
     		$pageModel = new ViewPageModel();
     		$pageModel->hotel = $this->hotel->findById($hotel->id);
     		$this->view->pageModel = $pageModel;
+    		
+    		$config = Zend_Registry::get("config");
+    		$pageSize = $config->bookingOverview->pageSize;
+    		
+    		$this->view->roomListPaginator = $this->_helper->paginator( $this->_getParam ( 'page', 1 ), $pageSize, $pageModel->getHotelRooms() );
+    		$this->view->bookingOverviewPaginator = $this->_helper->paginator( $this->_getParam ( 'page', 1 ), $pageSize, $pageModel->getBookingActivities() );
     	} else {
     	   $this->_redirect("/user/login");
     	}

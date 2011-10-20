@@ -26,10 +26,10 @@ class AddHotelRoomForm extends Zend_Form {
 		$element->setRequired(true);
 		$this->addElement($element);
 		
-//		$element = new Zend_Form_Element_Hidden("total");
-//		$element->setLabel("Total Amount");
-//		$element->setDescription("Write number of total room of this type.");
-//		$this->addElement($element);
+		$element = new Zend_Form_Element_Text("total");
+		$element->setLabel("Total rooms");
+		$element->setDescription("Write number of total room of this type.");
+		$this->addElement($element);
         
         $element = new Zend_Form_Element_Text("available");
         $element->setLabel("Avaiable Room");

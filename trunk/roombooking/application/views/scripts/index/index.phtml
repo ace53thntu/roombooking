@@ -13,6 +13,8 @@ $config = Zend_Registry::get("config");
 <li class="MenuItem">
 <?php echo isset($this->pageModel->hotel) ? $this->pageModel->hotel->name : "No hotel"?>
 </li>
+<li class="MenuItem"><a href="<?php echo $this->url(array('controller'=>'hotel', 'action'=>'add'))?>">Add Hotel</a></li>
+<li class="MenuItem"><a href="<?php echo $this->url(array('controller'=>'room', 'action'=>'add'))?>">Add Room</a></li>
 <li class="MenuItem"><a href="">Administration</a></li>
 <li class="MenuItem"><a href="">Frontdesk</a></li>
 <li class="MenuItem"><a href="">Statistics</a></li>
@@ -45,14 +47,14 @@ $rooms = $this->pageModel->getHotelRooms();
 ?>
 <ul>
 <?php 
-foreach ($rooms as $room) {
+foreach ($this->roomListPaginator as $room) {
 ?>
-<li class="Avail"><a class="various1" href="<?php echo $this->url(array("controller"=>"room", "action"=>"edit", "rid"=>$room->id), null, true)?>"><span class="RoomNo"><?php echo $room->available?></span><span class="HeadLine"><?php echo $room->name."(".$room->key.")"?></span><span class="DisCom"><span class="Dis">Discount:<?php echo Room::getDiscount($room)?>%</span><span class="Com">Commission: <?php echo Room::getCommission($room)?>%</span></span></a></li>
+<li class="Avail"><a class="various1" href="<?php echo $this->url(array("controller"=>"room", "action"=>"edit", "rid"=>$room->id), null, true)?>"><span class="RoomNo"><?php echo $room->available?></span><span class="HeadLine"><?php echo $room->name."(".$room->key.")"?></span><span class="DisCom"><span class="Dis">Discount:<?php echo Room::getDiscount($room, array(RoomDiscountRule::UNKNOWN))?>%</span><span class="Com">Commission: <?php echo Room::getCommission($room)?>%</span></span></a></li>
 <?php }?>
 </ul>
+<?php echo $this->paginationControl($this->roomListPaginator, 'Sliding', 'pagination.phtml'); ?>
 
-
-
+<!--
 <div class="ColControl">
 <p>Showing Roomcategories 1 - 9 of 9</p>
 <ul>
@@ -61,6 +63,7 @@ foreach ($rooms as $room) {
 <li><a href=""><span class="NextIcon"></span>Next</a></li>
 </ul>
 </div>
+-->
 
 <div class="ColFoot">
 <ul>
@@ -82,7 +85,7 @@ foreach ($rooms as $room) {
 
 <?php 
 $bookingActivities = $this->pageModel->getBookingActivities();
-echo $this->bookingOverview($bookingActivities);
+echo $this->bookingOverview($this->bookingOverviewPaginator, $bookingActivities);
 ?>
 <!--
 <div id="WrapEvent">
@@ -95,9 +98,7 @@ echo $this->bookingOverview($bookingActivities);
 </ul>
 </div>-->
 
-
-
-
+<!--
 <div class="ColControl">
 <p>Showing Events 1 - 6 of 6</p>
 <ul>
@@ -106,6 +107,7 @@ echo $this->bookingOverview($bookingActivities);
 <li><a href=""><span class="NextIcon"></span>Next</a></li>
 </ul>
 </div>
+-->
 
 <div class="ColFoot">
 <ul>

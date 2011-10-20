@@ -1,38 +1,68 @@
 <?php 
 echo $this->form;
 ?>
-<?php if (isset($this->rooms)) { ?>
+<?php if (isset($this->searchResults)) { ?>
 <hr/>
 <form name="SendRequestForm" id="SendRequestForm" method="POST" action="<?php echo $this->url(array("controller"=>"room", "action"=>"sendrequest"))?>">
 <table border="0" cellspacing="0" cellpadding="0" width="450px">
 <tr>
 <td>&nbsp;</td>
-<td>Key</td>
 <td>Name</td>
-<td>Description</td>
+<td>Number of person</td>
 <td>Price</td>
+<td>Discount</td>
 </tr>
 <?php
-foreach ($this->rooms as $room) {
+foreach ($this->searchResults as $searchResult) {
 ?>
 <tr>
 <td>
-<input type="checkbox" name="chk[]" value="<?php echo $room->id?>" />
-<input type="hidden" name="roomId<?php echo $room->id?>" id="roomId<?php echo $room->id?>" value="<?php echo $room->id?>"/>
+<input type="checkbox" name="chk[]" value="<?php echo $searchResult->id?>" />
+<input type="hidden" name="roomId<?php echo $searchResult->id?>" id="roomId<?php echo $searchResult->id?>" value="<?php echo $searchResult->room->id?>"/>
+<input type="hidden" name="price<?php echo $searchResult->id?>" id="price<?php echo $searchResult->id?>" value="<?php echo $searchResult->rate->price?>"/>
+<?php 
+$completeDiscount = 1;
+if (count($searchResult->roomDiscounts)>0) {
+	foreach ($searchResult->roomDiscounts as $roomDiscount) {
+		$completeDiscount = $completeDiscount * (100-$roomDiscount->discount);
+	}
+	if (count($searchResult->roomDiscounts) == 1) {
+		$completeDiscount = 100*count($searchResult->roomDiscounts)-$completeDiscount;
+	} else {
+		$countBase = 1;
+		for($index = 0; $index<count($searchResult->roomDiscounts); $index++) {
+			$countBase = $countBase * 100;
+		}
+		$countBase1 = 1;
+		for($index = 0; $index<count($searchResult->roomDiscounts)-1; $index++) {
+			$countBase1 = $countBase1 * 100;
+		}
+		$completeDiscount = ($countBase-$completeDiscount) / $countBase1;
+	}
+} else {
+	$completeDiscount = 0;
+}
+?>
+<input type="hidden" name="discount<?php echo $searchResult->id?>" id="discount<?php echo $searchResult->id?>" value="<?php echo $completeDiscount?>"/>
 </td>
-<td><?php echo $room->key?></td>
-<td><?php echo $room->name?></td>
-<td><?php echo $room->description?></td>
+<td><a href="#" title="<?php echo $searchResult->room->description?>"><?php echo $searchResult->room->name?></a></td>
+<td><?php echo $searchResult->rate->person_number?></td>
+<td><?php echo $searchResult->rate->price?></td>
 <td>
-<?php echo $this->roomPrice($room)?>
-<!--<a href="<?php echo $this->url(array("controller"=>"room", "action"=>"viewroomprice"))?>" target="_blank">View Price</a>-->
+<?php 
+$discountStr="";
+foreach ($searchResult->roomDiscounts as $roomDiscount) {
+	$discountStr.=$roomDiscount->discount."% + ";
+}
+echo substr($discountStr, 0, strlen($discountStr)-2);
+?>
 </td>
 </tr>
 <?php
 } 
 ?>
 <tr>
-<td colspan="4">
+<td colspan="5">
 <input type="submit" name="btnSend" value="Send">
 </td>
 </tr>

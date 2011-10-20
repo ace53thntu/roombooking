@@ -1,25 +1,25 @@
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
 LOCK TABLES `user` WRITE;
-INSERT INTO `booking`.`user` VALUES  (1,'lhj1982','670b14728ad9902aecba32e22fa4f6bd','James','Lee','','');
-INSERT INTO `booking`.`user` VALUES  (2,'adelablue','670b14728ad9902aecba32e22fa4f6bd','Ningjing','Chen','','adelablue@gmail.com');
+INSERT INTO `user` VALUES  (1,'lhj1982','670b14728ad9902aecba32e22fa4f6bd','James','Lee','','');
+INSERT INTO `user` VALUES  (2,'adelablue','670b14728ad9902aecba32e22fa4f6bd','Ningjing','Chen','','adelablue@gmail.com');
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 
 /*!40000 ALTER TABLE `hotel` DISABLE KEYS */;
 LOCK TABLES `hotel` WRITE;
-INSERT INTO `booking`.`hotel` VALUES  (1,'hotel1','hotel1','','test 1','stockholm','11147',1,'center','none','', '', '', '' ,'', '','','','', now(), now());
+INSERT INTO `hotel` VALUES  (1,'hotel1','hotel1','','test 1','stockholm','11147',1,'center','none','', '', '', '' ,'', '','','','', now(), now());
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `hotel` ENABLE KEYS */;
 
 /*!40000 ALTER TABLE `permission` DISABLE KEYS */;
 LOCK TABLES `permission` WRITE;
-INSERT INTO `booking`.`permission` VALUES  (1,'administrator');
+INSERT INTO `permission` VALUES  (1,'administrator');
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `permission` ENABLE KEYS */;
 
 /*!40000 ALTER TABLE `hotel_user` DISABLE KEYS */;
 LOCK TABLES `hotel_user` WRITE;
-INSERT INTO `booking`.`hotel_user` VALUES  (1,1,1,1);
+INSERT INTO `hotel_user` VALUES  (1,1,1,1);
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `hotel_user` ENABLE KEYS */;
 
@@ -30,7 +30,7 @@ UNLOCK TABLES;
     
 /*!40000 ALTER TABLE `country` DISABLE KEYS */;
 LOCK TABLES `country` WRITE;
-INSERT INTO `booking`.`country` VALUES  (1,'Afghanistan','AF',0),
+INSERT INTO `country` VALUES  (1,'Afghanistan','AF',0),
  (2,'Aland Islands','AX',0),
  (3,'Albania','AL',0),
  (4,'Algeria','DZ',0),
@@ -283,22 +283,28 @@ UNLOCK TABLES;
 
 /*!40000 ALTER TABLE `city` DISABLE KEYS */;
 LOCK TABLES `city` WRITE;
-INSERT INTO `booking`.`city` VALUES  (1,'Stockholm',209);
+INSERT INTO `city` VALUES  (1,'Stockholm',209);
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `city` ENABLE KEYS */;
 
 
 INSERT INTO rate_name (`key`, name) VALUES 
 ("STD", "Standard Rate"),
-("SPE", "Special Rate");
+("SPE", "Special Rate"),
+('SUM', 'Summer time');
 
+/*
 INSERT INTO calendar (id, `from`, `to`, name, description) VALUES 
 (1, '2011-05-01 03:00:00', '2011-10-30 03:00:00', 'summer time', 'Summer time');
 
 INSERT INTO calendar_price (id, calendar_id, room_id, price, created, modified) VALUES 
 (1, 1, 1, 300, now(), now());
-
+*/
 INSERT INTO rate (id, room_id, person_number, rate_name, price, created, modified) VALUES 
 (1, 1, 1, 3, 300, now(), now()),
 (2, 1, 2, 3, 300, now(), now()),
 (3, 1, 1, 4, 400, now(), now());
+
+INSERT INTO `room_discount_rule` (`key`, `rule_name`, `created`) VALUES ('UNKNOWN', 'Unknown Reason', now());
+INSERT INTO `room_discount_rule` (`key`, `rule_name`, `created`) VALUES ('SUMMER_TIME', 'Summer Time', now());
+INSERT INTO `room_discount_rule` (`key`, `rule_name`, `created`) VALUES ('CHILD_DISCOUNT', 'Children discount', now());

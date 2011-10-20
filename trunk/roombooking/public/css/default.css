@@ -477,8 +477,27 @@ a {
 	color: #FFF;
 }
 
+.GRAY a{
+	background-color: #808080;
+	display: inline-block;
+	height: 69px;
+}
+.GRAY a:hover {
+	background-color: #80B380;
+	display: inline-block;
+	color: #FFF;
+}
 
-
+.GOLDENROD a{
+	background-color: #DAA520;
+	display: inline-block;
+	height: 69px;
+}
+.GLODENROD a:hover {
+	background-color: #DAD820;
+	display: inline-block;
+	color: #FFF;
+}
 
 
 
